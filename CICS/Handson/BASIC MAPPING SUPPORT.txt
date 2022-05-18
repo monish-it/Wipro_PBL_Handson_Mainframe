@@ -1,0 +1,52 @@
+Q1.
+MAPADD1 DFHMSD TYPE=&SYSPARM,LANG=COBOL,MODE=INOUT,CTRL=FREEKB,        *
+               STORAGE=AUTO,TIOAPFX=YES                                 
+ADDMAP  DFHMDI SIZE=(24,80),LINE=1,COLUMN=1                             
+        DFHMDF POS=(06,35),INITIAL='ARITHMETIC CALCULATION',           *
+               LENGTH=25,ATTRB=PROT                                     
+        DFHMDF POS=(10,20),INITIAL='NUM1    : ',                       *
+               LENGTH=10,ATTRB=PROT                                     
+VALA    DFHMDF POS=(10,35),INITIAL='---',LENGTH=3,                     *
+               ATTRB=UNPROT,PICIN='9(3)'                                
+        DFHMDF POS=(11,20),INITIAL='NUM2    : ',                       *
+               LENGTH=10,ATTRB=PROT                                     
+VALB    DFHMDF POS=(11,35),INITIAL='---',LENGTH=3,                     *
+               ATTRB=UNPROT,PICIN='9(3)'                                
+        DFHMDF POS=(12,20),INITIAL='RES     : ',                       *
+               LENGTH=10,ATTRB=PROT                                     
+TOTAL   DFHMDF POS=(12,35),INITIAL='----',LENGTH=4,                    *
+               ATTRB=UNPROT,PICOUT='9(4)'  
+        DFHMSD TYPE=FINAL      
+               END   
+
+Q2.
+IDENTIFICATION DIVISION.                     
+PROGRAM-ID. ADDPGM.                          
+DATA DIVISION.                               
+WORKING-STORAGE SECTION.                     
+    COPY MAPADD1.                            
+PROCEDURE DIVISION.                          
+    EXEC CICS                                
+        SEND MAP('ADDMAP')                   
+             MAPSET('MAPADD1')               
+             FROM(ADDMAPO)                   
+             ERASE                           
+    END-EXEC.                                
+    EXEC CICS                                
+        RECEIVE MAP('ADDMAP')                
+             MAPSET('MAPADD1')               
+             INTO(ADDMAPI)                   
+    END-EXEC.                                
+    COMPUTE TOTALO = VALAI + VALBI.          
+    EXEC CICS                                
+        SEND MAP('ADDMAP')                   
+             MAPSET('MAPADD1')               
+         FROM(ADDMAPO)
+         ERASE        
+	END-EXEC.             
+	EXEC CICS             
+		RETURN            
+	END-EXEC.             
+	STOP RUN.             			 
+                                  
+                      

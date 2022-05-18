@@ -1,0 +1,118 @@
+======================================================
+ABC LTD. IS WORKING TO COLLATE VARIOUS DEPARTMENTS EMPLOYEE DETAILS WHO HAVE JOINED IN DIFFERENT LOCATIONS ACROSS INDIA, INTO A SINGLE FILE AND TO CREATE A MASTER DATA FOR ANALYSIS OF PROMOTION TO THE HIGHER BAND.
+======================================================
+
+*****(1) CREATE A PS NAMED EMPCDC WITH THE GIVEN DATA.*****
+
+//WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A
+//STEP01 EXEC PGM=IEBGENER
+//SYSUT1 DD *
+101ANDRESON10B12012
+102OLIVER  10B22012
+103HARRY   10B22010
+104JACOB   10B12012
+105JAMES   20B12012
+106NOAH    20B22009
+107HENRY   20B22011
+108DANIEL  30B12010
+109MASON   30B22008
+//SYSUT2 DD DSN=WPR062.FEB21.EMPCDC,
+            DISP=(NEW,CATLG,CATLG),
+            SPACE=(TRK,(1,1,0)),
+            DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)
+//SYSIN DD DUMMY
+//SYSPRINT DD SYSOUT=*
+*****(2) CREATE A PS NAMED EMPBDC WITH GIVEN DATA.*****
+
+//WPR062G JOB WIP,WIP,NOTIFY=&SYSUID,CLASS=A
+//STEP01 EXEC PGM=IEBGENER
+//SYSUT1 DD *
+ 201ISLA    10B12012
+ 202RUBY    10B22009
+ 203ISABELLA10B22008
+ 204ELLA    20B12010
+ 205ISAAC   20B22007
+ 206LOGAN   20B22010
+//SYSUT2 DD DSN=WPR062.FEB21.EMPBDC,
+            DISP=(NEW,CATLG,CATLG),
+            SPACE=(TRK,(1,1,0)),
+            DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)
+//SYSIN DD DUMMY
+//SYSPRINT DD SYSOUT=*
+
+*****3)CREATE A PROCEDURE CALLED SRTEMP WHICH TAKES THE MEMBER NAMES AND SORTS THE DATA IN ASCENDING ORDER OF THEIR NAME AND STORES THE RESULT IN A PS NAMED HISTDATA.*****
+
+SRTEMP
+
+//S1 EXEC PGM=SORT,COND=()                      
+//SORTIN DD DSN=&INF,DISP=OLD                   
+//SORTOUT DD DSN=&OUTF,                         
+//           DISP=(MOD,CATLG,CATLG),            
+//           SPACE=(TRK,(1,1,0)),               
+//           DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)
+//SYSIN DD *                                    
+  SORT FIELDS=(4,8,CH,A)                        
+//SYSOUT DD SYSOUT=*                            
+//SYSPRINT DD SYSOUT=*                          
+
+
+JCLMP3
+//WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A
+//PROLIB JCLLIB ORDER=(WPR062.FEB21.JCLU1)  
+//STEP1 EXEC PROC=SRTEMP,                   
+//            INF=WPR062.FEB21.EMPBDC,      
+//            OUTF=WPR062.FEB21.HISTDATA    
+
+
+*****4) CREATE A JOB TO DO THE ABOVE NEEDS ENSURE THAT THE STEP N SHOULD EXECUTE ONLY IF STEP N-1 IS SUCCESS.*****
+
+PROC5
+
+//S1 EXEC PGM=SORT,COND=()      
+//SORTIN1 DD DSN=&INF1,DISP=OLD 
+//SORTIN2 DD DSN=&INF2,DISP=OLD 
+//SORTOUT DD DSN=&OUTF,DISP=OLD 
+//SYSIN DD *                    
+  MERGE FIELDS=(4,8,CH,A)       
+/*                              
+//SYSPRINT DD SYSOUT=*          
+//SYSOUT DD SYSOUT=*            
+
+JCLMP4
+
+//WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A                           
+//PROLIB JCLLIB ORDER=(WPR062.FEB21.JCLU1)                             
+//STEP01 EXEC PROC=SRTEMP,                                             
+//            INF=WPR062.FEB21.EMPCDC,                                 
+//            OUTF=WPR062.FEB21.TEMP1                                  
+//S1.SYSIN DD *                                                        
+  SORT FIELDS=(4,8,CH,A),                                              
+  STOPAFT=5                                                            
+/*                                                                     
+//STEP02 EXEC PROC=SRTEMP,                                             
+//            INF=WPR062.FEB21.EMPBDC,                                 
+//            OUTF=WPR062.FEB21.TEMP2,                                 
+//            COND.S1=(0,NE,STEP01.S1)                                 
+//STEP03 EXEC PROC=PROC5,COND.S1=(0,NE,STEP02.S1),                     
+//        INF1=WPR062.FEB21.TEMP1,                                     
+//        INF2=WPR062.FEB21.TEMP2,                                     
+//        OUTF=WPR062.FEB21.HISTDATA                                   
+//STEP04 EXEC PGM=IEBGENER,                                            
+//            COND=((0,NE,STEP01.S1),(0,NE,STEP02.S1),(0,NE,STEP03.S1))
+//SYSUT1 DD *                                                          
+SUCCESS                                                                
+//SYSUT2 DD SYSOUT=*                                                   
+//SYSPRINT DD SYSOUT=*                                                 
+//SYSIN DD DUMMY                                                       
+//SYSOUT DD SYSOUT=*                                                   
+//STEP05 EXEC PGM=IEBGENER,                                            
+//            COND=((0,EQ,STEP01.S1),(0,EQ,STEP02.S1),(0,EQ,STEP03.S1))
+//SYSUT1 DD *                                                          
+FAILURE-JOB NOT COMPLETE                                               
+//SYSUT2 DD SYSOUT=*                                                   
+//SYSIN DD DUMMY                                                       
+//SYSPRINT DD SYSOUT=*                                                 
+//SYSOUT DD SYSOUT=*                                                   
+
+===========================================================================================
+===========================================================================================

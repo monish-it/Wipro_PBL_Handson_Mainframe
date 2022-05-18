@@ -1,0 +1,39 @@
+#WORKING WITH SQL WITH SPUFI S SELECT.
+
+Q1.Create a query to display all the records with all their columns from Employees_TB table.
+ Learn the structure of the Employees table
+
+ANS ---  SELECT * FROM EMPLOYEES_TB; 
+
+
+Q2. Create a query to display the employee name, job Profile, hire date, and employee no
+ for all employees in the Employees Tb table
+
+ANS-- SELECT employee_name,job_Profile, hire_date, and employee _no  from employees_tb;
+
+
+Q4. Create a query to display all unique job Profiles from the EMPLOYEES_TB table
+
+ANS- SELECT UNIQUE JOB_PROFILE FROM EMPLOYEES_TB;
+
+
+Q5. Create a query to display employee No, Employee name, and salary of all employees 
+in the order of who is being paid highest
+
+ANS- SELECT employee _No, Employee _name, salary from employees_tb  order by salary;
+
+
+Q6.Create a query to display employee No. name, salary with alias name "Current Salary and 
+salary increased by 15% as "Dream Salary" of all employees
+
+ANS---select employee_No. ,employee_name, salary as "Current Salary" from employees_tb;
+
+
+Q7.Create a query to display employee No, name, salary and salary + commission pct as "total salary" of all employees.
+
+ANS-  select employee_No. ,employee_name, salary ,salary+comminssion as "total salary" from employees_tb;
+
+
+Q9.create a query to list the employees whoes salary is not defined
+
+ANS--- select * from employees_tb where salary =null;

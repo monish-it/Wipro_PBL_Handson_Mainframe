@@ -1,0 +1,18 @@
+**********MVS AND TSO********** 
+
+=======================================
+VIEWING DATA SETS :
+=======================================
+
+
+* list all the data sets by giving user id and batch number :
+- go to tso and in the command line enter 3 and goto utilities
+- inside utilities press 4 and go to data set list
+- give the necessary user id and batch and press '*' and enter 
+
+* view the properties of data set :
+- go to tso and in the command line enter 3 and goto utilities
+- inside utilities press 4 and go to data set list
+- give the necessary user id and batch and press '*' and enter 
+- at the left hand side of any data set press 's' and enter 
+

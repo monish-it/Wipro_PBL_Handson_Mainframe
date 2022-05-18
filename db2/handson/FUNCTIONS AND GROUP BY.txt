@@ -1,0 +1,14 @@
+#FUNCTIONS AND GROUP BY
+
+Q1.create a query to display the total salary paid out to each department
+
+SELECT department_name, SUM(salary)
+FROM employees_tb 
+GROUP BY department_id;
+
+Q3.Create a query to display the total no of employees working in each department
+
+SELECT COUNT(EMPLOYEE_Name) 
+FROM employees_tb 
+GROUP BY department_id;
+

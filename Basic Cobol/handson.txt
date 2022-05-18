@@ -1,0 +1,884 @@
+******************************************************
+DIVISIONS OF COBOL
+******************************************************
+
+(1) DISPLAY WELCOME TO WIPRO IN SPOOL
+
+IDENTIFICATION DIVISION.                
+PROGRAM-ID. PRG1.                       
+ENVIRONMENT DIVISION.                   
+DATA DIVISION.                          
+PROCEDURE DIVISION.                     
+       DISPLAY "WELCOME TO WIPRO!".          
+       STOP RUN. 
+
+       **========**  
+
+(2) ACCEPT STRING FROM USER AND DISPLAY IT
+
+IDENTIFICATION DIVISION.                        
+PROGRAM-ID. PRG2.                               
+ENVIRONMENT DIVISION.                           
+DATA DIVISION.                                  
+WORKING-STORAGE SECTION.                        
+77 USERINP PIC A(10).                           
+PROCEDURE DIVISION.                             
+       ACCEPT USERINP.                          
+       DISPLAY "USER INPUT IS:" USERINP.                          
+       STOP RUN. 
+
+       **========**  
+
+(3) ACCEPT TWO NUMBERS FROM THE USER AND DISPLAY IT
+
+IDENTIFICATION DIVISION.              
+PROGRAM-ID. PRG3.                     
+ENVIRONMENT DIVISION.                 
+DATA DIVISION.                        
+WORKING-STORAGE SECTION.              
+77 NUM1 PIC 9(2).                     
+77 NUM2 PIC 9(2).                     
+PROCEDURE DIVISION.                   
+    ACCEPT NUM1.                      
+    ACCEPT NUM2.                      
+    DISPLAY NUM1.                     
+    DISPLAY NUM2.                     
+    STOP RUN.
+
+       **========**  
+
+(4) ACCEPT STUDENT RECORD AND DISPLAY SAME
+
+IDENTIFICATION DIVISION.                     
+PROGRAM-ID. PRG4.                            
+ENVIRONMENT DIVISION.                        
+DATA DIVISION.                               
+WORKING-STORAGE SECTION.                     
+01 G1.                                       
+    02 ROLLNO PIC 9(3).                      
+    02 FILLER PIC X.                         
+    02 STUNAME PIC A(8).                     
+    02 FILLER PIC X.                         
+    02 MARK1 PIC 9(3).                       
+    02 FILLER PIC X.                         
+    02 MARK2 PIC 9(3).                       
+    02 FILLER PIC X.                         
+    02 MARK3 PIC 9(3).       
+PROCEDURE DIVISION.          
+   ACCEPT G1.               
+   DISPLAY G1               
+   STOP RUN.     
+
+          **========**  
+
+******************************************************
+COBOL VERBS
+******************************************************
+
+(1) ACCEPT DATE AND TIME DISPLAY IN THE FORMAT (DD/MM/YY & HH:MM:SS)
+
+IDENTIFICATION DIVISION.                   
+PROGRAM-ID. PRG5.                          
+ENVIRONMENT DIVISION.                      
+DATA DIVISION.                             
+WORKING-STORAGE SECTION.                   
+01 G1.                                     
+   02 YY PIC X(2).                         
+   02 MM PIC X(2).                         
+   02 DD PIC X(2).                         
+01 G2.                                     
+   02 DD PIC X(2).                         
+   02 FILLER PIC X VALUE '-'.              
+   02 MM PIC X(2).                  
+   02 FILLER PIC X VALUE ‘-‘.     
+   02 YY PIC X(2).                     
+01 G3.                                 
+   02 HH PIC X(2).                     
+   02 MM PIC X(2).                     
+   02 SS PIC X(2).                     
+01 G4.                                 
+   02 HH PIC X(2).                     
+   02 FILLER PIC X VALUE ':'.          
+   02 MM PIC X(2).                     
+   02 FILLER PIC X VALUE ':'.          
+   02 SS PIC X(2).                     
+PROCEDURE DIVISION.                    
+       ACCEPT G1 FROM DATE.            
+       ACCEPT G3 FROM TIME.            
+       MOVE CORRESPONDING G1 TO G2.    
+       MOVE CORRESPONDING G3 TO G4.    
+       DISPLAY G2.                   
+       DISPLAY G4.                   
+       STOP RUN. 
+
+       **========**  
+
+(2)	IILUSTRATE DATA MOVEMENT IN A VARIABLE 
+
+IDENTIFICATION DIVISION.                        
+PROGRAM-ID. PRG6.                               
+ENVIRONMENT DIVISION.                           
+DATA DIVISION.                                  
+WORKING-STORAGE SECTION.                        
+77 EMPID PIC 9(5) VALUE 3454.                   
+77 EMPID2 PIC 9(5).                             
+77 ALPNUM PIC X(10) VALUE 'ABC123'.             
+PROCEDURE DIVISION.                             
+    MOVE EMPID TO EMPID2.                       
+    DISPLAY EMPID.                              
+    DISPLAY EMPID2.                             
+    DISPLAY ALPNUM.                             
+    STOP RUN. 
+
+       **========**  
+
+(3) PROGRAM TO WORK WITH DECIMAL
+
+IDENTIFICATION DIVISION.               
+PROGRAM-ID. PRG7.                      
+ENVIRONMENT DIVISION.                  
+DATA DIVISION.                         
+WORKING-STORAGE SECTION.               
+77 TEMP PIC 9(2)V9(2).                 
+PROCEDURE DIVISION.                    
+    ACCEPT TEMP.                       
+    DISPLAY TEMP.                      
+    STOP RUN.
+
+	   **========**
+
+(4) PROGRAM TO WORK WITH SIGNED NOS.
+
+IDENTIFICATION DIVISION.                  
+PROGRAM-ID. PRG8.                         
+ENVIRONMENT DIVISION.                     
+DATA DIVISION.                            
+WORKING-STORAGE SECTION.                  
+77 TEMP PIC S9(4).                        
+PROCEDURE DIVISION.                       
+    ACCEPT TEMP.                          
+    DISPLAY TEMP.                         
+    STOP RUN.   
+
+       **========**   
+
+******************************************************
+EDIT CHARACTER
+******************************************************
+
+(1) ILLUSTRATE EDIT PICTURE COST
+
+IDENTIFICATION DIVISION.               
+PROGRAM-ID. PRG7.                      
+ENVIRONMENT DIVISION.                  
+DATA DIVISION.                         
+WORKING-STORAGE SECTION.               
+01 G1.                                 
+    02 NUM1 PIC ZZ99.                  
+    02 NUM2 PIC **99.                  
+    02 NUM3 PIC ZZ99.99.               
+    02 NUM4 PIC $$$.99.                
+    02 NUM5 PIC -999.                  
+    02 NUM6 PIC +999.                  
+    02 NUM7 PIC 99CR.                  
+PROCEDURE DIVISION.  
+
+        **========**   
+
+******************************************************
+USAGE CLAUSE
+******************************************************
+
+(1) IMPLEMENT USAGE OF COMP VARIABLES
+
+IDENTIFICATION DIVISION.                                     
+PROGRAM-ID. PRG10.                                           
+ENVIRONMENT DIVISION.                                        
+DATA DIVISION.                                               
+WORKING-STORAGE SECTION.                                     
+77 NUM1       PIC 9(4) USAGE IS COMP VALUE 0045.             
+77 NUM2       PIC 9(4) USAGE IS COMP VALUE 0045.             
+77 TOTAL      PIC 9(5) USAGE IS COMP.                        
+PROCEDURE DIVISION.                                          
+    COMPUTE TOTAL = NUM1 + NUM2.                             
+    DISPLAY TOTAL.                                           
+    STOP RUN.
+
+       **========**   
+
+******************************************************
+ARITHMETIC VERBS
+******************************************************
+
+(1) PERFORM ARITHMETIC OPERATIONS
+
+IDENTIFICATION DIVISION.                             
+PROGRAM-ID. PRG10.                                   
+ENVIRONMENT DIVISION.                                
+DATA DIVISION.                                       
+WORKING-STORAGE SECTION.                             
+77 NUM1       PIC 9(4).                              
+77 NUM2       PIC 9(4).                              
+77 TOTAL      PIC 9(5).                              
+PROCEDURE DIVISION.                                  
+    ACCEPT NUM1.                                     
+    ACCEPT NUM2.                                     
+    ADD NUM1 TO NUM2 GIVING TOTAL.                   
+    DISPLAY TOTAL.                                 
+    SUBTRACT NUM1 FROM NUM2 GIVING TOTAL.          
+    DISPLAY TOTAL.                                 
+    MULTIPLY NUM1 BY NUM2 GIVING TOTAL.            
+    DISPLAY TOTAL.                                 
+    DIVIDE NUM1 BY NUM2 GIVING TOTAL.              
+    DISPLAY TOTAL.                                 
+    STOP RUN.
+
+        **========**   
+
+(2) WS TOT
+
+IDENTIFICATION DIVISION.                                     
+PROGRAM-ID. PRG10.                                           
+ENVIRONMENT DIVISION.                                        
+DATA DIVISION.                                               
+WORKING-STORAGE SECTION.                                     
+77 WS-A       PIC 99V999 VALUE 23.678.                       
+77 WS-B       PIC 99V999 VALUE 29.459.                       
+77 WS-TOT     PIC 99V9.                                      
+PROCEDURE DIVISION.                                          
+    COMPUTE WS-TOT = WS-A + WS-B.                            
+    DISPLAY WS-TOT.                                          
+    STOP RUN.
+
+        **========**   
+
+(3) ROUNDED VALUES
+
+IDENTIFICATION DIVISION.                                     
+PROGRAM-ID. PRG10.                                           
+ENVIRONMENT DIVISION.                                        
+DATA DIVISION.                                               
+WORKING-STORAGE SECTION.                                     
+77 WS-A       PIC 99V999 VALUE 23.678.                       
+77 WS-B       PIC 99V999 VALUE 29.459.                       
+77 WS-TOT     PIC 99V9.                                      
+PROCEDURE DIVISION.                                          
+    COMPUTE WS-TOT ROUNDED = WS-A + WS-B.                    
+    DISPLAY WS-TOT.                                          
+    STOP RUN.
+
+        **========**   
+
+(4) C TO F
+
+IDENTIFICATION DIVISION.                                        
+PROGRAM-ID. PRG14.                                              
+ENVIRONMENT DIVISION.                                           
+DATA DIVISION.                                                  
+WORKING-STORAGE SECTION.                                        
+77 CELCIUS       PIC 9(3).                                      
+77 FAHRENHEIT    PIC 999V999.                                   
+PROCEDURE DIVISION.                                             
+    ACCEPT CELCIUS.                                             
+    COMPUTE FAHRENHEIT = ( CELCIUS * ( 9 / 5 ) ) + 32.          
+    DISPLAY FAHRENHEIT.                                         
+    STOP RUN.
+
+        **========**   
+
+(5) CALCULATE RATE OF INTEREST
+
+IDENTIFICATION DIVISION.                                  
+PROGRAM-ID. PRG14.                                        
+ENVIRONMENT DIVISION.                                     
+DATA DIVISION.                                            
+WORKING-STORAGE SECTION.                                  
+77 P       PIC 9(2).                                      
+77 R       PIC 9(2).                                      
+77 T       PIC 9(2).                                      
+77 I       PIC 9(4).                                      
+PROCEDURE DIVISION.                                       
+    ACCEPT P.                                             
+    ACCEPT R.                                             
+    ACCEPT T.                                             
+    COMPUTE I = ( P * R * R ) / 100                       
+    DISPLAY "INTEREST IS:   " I                           
+    STOP RUN. 
+
+        **========**   
+
+******************************************************
+CONDITIONAL EXPRESSION AND PERFORM VERBS
+******************************************************
+
+(1) CALCULATE TOTAL, AVERAGE, GRADE
+
+MOVE "I" TO GRADE                         
+    ELSE                                         
+       IF AVG > 60 AND AVG < 79                                    MOVE "II" TO GRADEELSE                                                        IF AVG > 40 AND AVG < 60
+             MOVE "III" TO GRADE
+          ELSE
+             MOVE "FAIL" TO GRADE
+    END-IF.
+DISP-PARA.
+    DISPLAY "THE TOTAL IS: "    TOTAL.
+    DISPLAY "THE AVERAGE IS: "    AVG.
+    DISPLAY "THE PERCENTAGE IS: "    PER.        
+    DISPLAY "GRADE IS: "    GRADE.
+
+        **========**
+
+(2) REPEAT ABOVE PROGRAM USING PERFORM STATEMENT
+
+IDENTIFICATION DIVISION.                    
+PROGRAM-ID. PRG7.
+ENVIRONMENT DIVISION.
+DATA DIVISION.
+WORKING-STORAGE SECTION.
+01 G1.
+    02 MARK1 PIC 9(2).
+    02 FILLER PIC X.
+    02 MARK2 PIC 9(2).
+    02 FILLER PIC X.
+    02 MARK3 PIC 9(2).
+77 TOTAL PIC 9(3).
+77 AVG PIC 9(3)V9(3).
+77 PER PIC 9(3)V9(3).
+77 GRADE PIC A(5).
+PROCEDURE DIVISION.
+MAIN-PARA.
+    PERFORM ACCEPT-PARA THRU DISP-PARA 5 TIMES.
+    STOP RUN.
+ACCEPT-PARA.
+    ACCEPT G1.
+COMP-PARA.
+    COMPUTE TOTAL = ( MARK1  + MARK2 + MARK3 ).
+    COMPUTE AVG = TOTAL / 3.
+    COMPUTE PER = ( TOTAL / 300 ) * 100.
+    IF AVG > 80
+       MOVE "I" TO GRADE
+    ELSE
+       IF AVG > 60 AND AVG < 79                                   MOVE "II" TO GRADEELSE                                                       IF AVG > 40 AND AVG < 60              
+             MOVE "III" TO GRADE                
+          ELSE                                  
+             MOVE "FAIL" TO GRADE               
+    END-IF.                                     
+DISP-PARA.                                      
+    DISPLAY "THE TOTAL IS: "    TOTAL.          
+    DISPLAY "THE AVERAGE IS: "    AVG.          
+    DISPLAY "THE PERCENTAGE IS: "    PER.       
+    DISPLAY "GRADE IS: "    GRADE.
+
+        **========** 
+
+(3) PRIME OR NOT
+
+IDENTIFICATION DIVISION.                                    
+PROGRAM-ID. PRG18.                                          
+ENVIRONMENT DIVISION.                                       
+DATA DIVISION.                                              
+WORKING-STORAGE SECTION.                                    
+77 INP-NUM      PIC 9(3).                                   
+77 RES          PIC 9(1) VALUE 0.                           
+77 INC          PIC 9(2)  VALUE 2.                          
+77 QUO          PIC ZZ9.                                    
+77 REM          PIC ZZ9.                                    
+PROCEDURE DIVISION.                                         
+MAIN-PARA.                                                  
+   PERFORM ACCEPT-PARA.                                     
+    PERFORM COMP-PARA.                                    
+    PERFORM DISP-PARA.                                    
+    STOP RUN.                                             
+ ACCEPT-PARA.                                             
+    ACCEPT INP-NUM.                                       
+ COMP-PARA.                                               
+    PERFORM UNTIL INC < INP-NUM                           
+       DIVIDE INP-NUM BY INC GIVING QUO REMAINDER REM     
+       IF REM IS EQUAL TO 0                               
+          MOVE 1 TO RES                                   
+          EXIT   
+
+       ELSE                                               
+        COMPUTE INC = INC + 1                             
+       END-IF                                             
+    END-PERFORM.                                          
+DISP-PARA.                                           
+   IF RES IS EQUAL TO 0                              
+      DISPLAY "THE GIVEN NUMBER IS PRIME!"           
+   ELSE                                              
+      DISPLAY "THE GIVEN NUMBER IS NON PRIME!"       
+   END-IF.  
+
+        **========** 
+
+(4) DISPLAY NATURAL NUMS TO GIVEN LIMIT
+
+IDENTIFICATION DIVISION.                          
+PROGRAM-ID. PRG18.                                
+ENVIRONMENT DIVISION.                             
+DATA DIVISION.                                    
+WORKING-STORAGE SECTION.                          
+77 STOP-AT      PIC 9(3).                         
+77 INCREMENT    PIC 9(3) VALUE 1.                 
+PROCEDURE DIVISION.                               
+MAIN-PARA.                                        
+   PERFORM ACCEPT-PARA.                           
+   PERFORM COMP-PARA.                             
+   STOP RUN.                                      
+ACCEPT-PARA.                                      
+   ACCEPT STOP-AT.                                
+COMP-PARA.                                   
+   PERFORM VARYING INCREMENT FROM 1 BY 1     
+      UNTIL INCREMENT > STOP-AT              
+         DISPLAY INCREMENT                   
+   END-PERFORM.  
+
+        **========**   
+(5) SUM OF INDIVIDUAL DIGITS
+
+IDENTIFICATION DIVISION.                                
+PROGRAM-ID. PRG18.                                      
+ENVIRONMENT DIVISION.                                   
+DATA DIVISION.                                          
+WORKING-STORAGE SECTION.                                
+77 NUM          PIC 9(4).                               
+77 TEMP         PIC 9(4).                               
+77 INCREMENT    PIC 9(3) VALUE 1.                       
+77 QUO          PIC 9(3).                               
+77 REM          PIC 9(3).                               
+77 TOTAL        PIC 9(4) VALUE 0.                       
+PROCEDURE DIVISION.                                     
+MAIN-PARA.                                              
+    PERFORM ACCEPT-PARA.                                
+    PERFORM COMP-PARA.                                 
+    PERFORM DISP-PARA.                                 
+    STOP RUN.                                          
+ACCEPT-PARA.                                           
+    ACCEPT NUM.                                        
+COMP-PARA.                                             
+    MOVE NUM TO TEMP                                   
+    PERFORM UNTIL TEMP < 10                            
+       DIVIDE TEMP BY 10 GIVING QUO REMAINDER REM      
+       MOVE QUO TO TEMP                                
+       COMPUTE TOTAL = TOTAL + REM                     
+    END-PERFORM.                                       
+    COMPUTE TOTAL = TOTAL + TEMP.                      
+DISP-PARA.                                             
+    DISPLAY "THE SUM OF DIGITS OF NUMBER " NUM.        
+    DISPLAY "IS:  "    TOTAL.  
+
+        **========** 
+
+(6) LIST ODD AND EVEN FROM LIST
+
+IDENTIFICATION DIVISION.                                    
+PROGRAM-ID. PRG18.                                          
+ENVIRONMENT DIVISION.                                       
+DATA DIVISION.                                              
+WORKING-STORAGE SECTION.                                    
+77 START-LIST        PIC 9(4).                              
+77 END-LIST          PIC 9(4).                              
+77 INCREMENT         PIC 9(3).                              
+77 REM               PIC 9(3).                              
+77 QUO               PIC 9(3).                              
+PROCEDURE DIVISION.                                         
+MAIN-PARA.                                                  
+    PERFORM ACCEPT-PARA.                                    
+    PERFORM COMP-PARA.                                      
+    STOP RUN.                                               
+ACCEPT-PARA.                                               
+   ACCEPT START-LIST.                                     
+   ACCEPT END-LIST.
+
+        **========**   
+
+(7) SORT 10 ARITHMETIC NUMBERS
+
+
+
+        **========**   
+(8) PERFORM ARITHMETIC OPERATIONS
+
+IDENTIFICATION DIVISION.                       
+PROGRAM-ID. PRG18.                             
+ENVIRONMENT DIVISION.                          
+DATA DIVISION.                                 
+WORKING-STORAGE SECTION.                       
+77 NUM-1        PIC 9(3).                      
+77 NUM-2        PIC 9(3).                      
+77 OPTION       PIC 9(1).                      
+77 RESULT       PIC 9(4) VALUE 0.              
+PROCEDURE DIVISION.                            
+MAIN-PARA.                                     
+    PERFORM ACCEPT-PARA.                       
+     PERFORM COMP-PARA.                             
+     PERFORM DISPLAY-PARA.                          
+     STOP RUN.                                      
+ ACCEPT-PARA.                                       
+     ACCEPT NUM-1.                                  
+     ACCEPT NUM-2.                                  
+     ACCEPT OPTION.                                 
+ COMP-PARA.                                         
+     EVALUATE OPTION                                
+        WHEN '1'                                    
+              COMPUTE RESULT = NUM-1 + NUM-2        
+        WHEN '2'                                    
+              COMPUTE RESULT = NUM-1 - NUM-2        
+        WHEN '3'                                    
+              COMPUTE RESULT = NUM-1 * NUM-2        
+        WHEN '4'                                    
+             COMPUTE RESULT = NUM-1 / NUM-2          
+    END-EVALUATE.                                    
+DISPLAY-PARA.                                        
+    DISPLAY "OPTION WAS: " OPTION.                   
+    DISPLAY "RESULT IS: " RESULT.                              
+
+        **========**   
+
+******************************************************
+OTHER COBOL VERBS
+******************************************************
+
+(1) GET PHONE NUMBER AND DISPLAY DETAILS
+
+	IDENTIFICATION DIVISION.                         
+PROGRAM-ID. PRG18.                               
+ENVIRONMENT DIVISION.                            
+DATA DIVISION.                                   
+WORKING-STORAGE SECTION.                         
+01 TELEPHONE-NUMBER         PIC X(13).           
+01 TELE-NUM REDEFINES TELEPHONE-NUMBER.          
+   05 ISD-CODE              PIC X(3).            
+   05 STD-CODE              PIC X(3).            
+   05 AREA-CODE             PIC X(3).            
+   05 NUM                   PIC X(7).            
+PROCEDURE DIVISION.                              
+MAIN-PARA.                                       
+  PERFORM ACCEPT-PARA.                        
+  PERFORM DISP-PARA.                          
+  STOP RUN.                                   
+ACCEPT-PARA.                                   
+   ACCEPT TELEPHONE-NUMBER.                    
+DISP-PARA.                                     
+   DISPLAY ISD-CODE.                           
+   DISPLAY STD-CODE.                           
+   DISPLAY AREA-CODE.                          
+   DISPLAY NUM.     
+
+
+        **========**   
+
+(2) DISPLAY FIRST AND LAST NAME TOGETHER 
+
+IDENTIFICATION DIVISION.                         
+PROGRAM-ID. PRG25.                               
+ENVIRONMENT DIVISION.                            
+DATA DIVISION.                                   
+WORKING-STORAGE SECTION.                         
+01 F-NAME.                                       
+    02 FIRST-NAME       PIC A(5).                
+    02 LAST-NAME        PIC A(5).                
+01 INDI-NAME REDEFINES F-NAME.                   
+    02 FULL-NAME        PIC A(10).               
+PROCEDURE DIVISION.                              
+MAIN-PARA.                                       
+   PERFORM ACCEPT-PARA.                          
+   PERFORM DISP-PARA.                       
+   STOP RUN.                                
+ACCEPT-PARA.                                
+   ACCEPT F-NAME.                           
+DISP-PARA.                                  
+   DISPLAY FIRST-NAME.                      
+   DISPLAY LAST-NAME.                       
+   DISPLAY FULL-NAME.  
+
+        **========**   
+
+(3)
+
+IDENTIFICATION DIVISION.                              
+PROGRAM-ID. PRG25.                                    
+ENVIRONMENT DIVISION.                                 
+DATA DIVISION.                                        
+WORKING-STORAGE SECTION.                              
+01 W-REC.                                             
+   02 W-DAYS.                                         
+      05 D1 PIC X(10) VALUE "SUNDAY".                 
+      05 D2 PIC X(10) VALUE "MONDAY".                 
+      05 D3 PIC X(10) VALUE "TUESDAY".                
+      05 D4 PIC X(10) VALUE "WEDNESDAY".              
+      05 D5 PIC X(10) VALUE "THURSDAY".               
+      05 D6 PIC X(10) VALUE "FRIDAY".                 
+      05 D7 PIC X(10) VALUE "SATURDAY".                   
+   02 W-DAYS1 REDEFINES W-DAYS PIC X(10) OCCURS 7 TIMES.  
+77 I PIC 9(2) VALUE 0.                                    
+PROCEDURE DIVISION.                                       
+MAIN-PARA.                                                
+   PERFORM DISP-PARA.                                     
+   STOP RUN.                                              
+DISP-PARA.                                                
+   PERFORM VARYING I FROM 1 BY 1 UNTIL I > 7              
+      DISPLAY W-DAYS1(I)                                  
+   END-PERFORM.
+
+   
+        **========**   
+(5)
+
+IDENTIFICATION DIVISION.                                 
+PROGRAM-ID. PRG25.                                       
+ENVIRONMENT DIVISION.                                    
+DATA DIVISION.                                           
+WORKING-STORAGE SECTION.                                 
+01 INP-AGE          PIC 999.                             
+   88 MINOR         VALUE IS 1 THRU 18.                  
+   88 MAJOR         VALUE IS 18 THRU 30.                 
+   88 MIDDLE-AGE    VALUE IS 30 THRU 40.                 
+   88 OLD-AGE       VALUE IS 41 THRU 60.                 
+   88 SR-CITIZEN    VALUE IS 60 THRU 100.                
+77 AMOUNT           PIC 9(5).                            
+77 RETURNS          PIC 9(5)V9(5).                       
+PROCEDURE DIVISION.                    
+MAIN-PARA.                             
+   PERFORM ACCEPT-PARA.                
+   PERFORM COMP-PARA.                  
+   PERFORM DISP-PARA.                  
+   STOP RUN.                           
+ACCEPT-PARA.                           
+   ACCEPT INP-AGE.                     
+   ACCEPT AMOUNT.                      
+COMP-PARA.                                                
+   IF MINOR                                               
+      COMPUTE RETURNS = AMOUNT + ( ( 7 / 100 ) * AMOUNT)  
+   ELSE IF MAJOR                                          
+      COMPUTE RETURNS = AMOUNT + ( ( 9 / 100 ) * AMOUNT)  
+   ELSE IF MIDDLE-AGE                                     
+      COMPUTE RETURNS = AMOUNT + ( ( 10 / 100 ) * AMOUNT) 
+   ELSE IF OLD-AGE                                        
+      COMPUTE RETURNS = AMOUNT + ( ( 11 / 100 ) * AMOUNT)
+   ELSE                                                    
+      COMPUTE RETURNS = AMOUNT + ( ( 12 / 100 ) * AMOUNT)  
+   END-IF.                                                 
+DISP-PARA.                                                 
+   DISPLAY INP-AGE.                                        
+   DISPLAY AMOUNT.                                         
+   DISPLAY RETURNS.
+
+        **========**   
+(6)
+
+IDENTIFICATION DIVISION.                                     
+PROGRAM-ID. PRG25.                                           
+ENVIRONMENT DIVISION.                                        
+DATA DIVISION.                                               
+WORKING-STORAGE SECTION.                                     
+01 INP-CHAR         PIC X(1).                                
+    88 VOWEL         VALUE "A", "E", "I", "O", "U".          
+    88 CONSONANT     VALUE "B", "C", "D", "F", "G", "H"      
+                           "J" THRU "N", "P" THRU "T"        
+                           "V" THRU "Z".                     
+    88 DIGIT         VALUE "0" THRU "9".                     
+ PROCEDURE DIVISION.                                    
+ MAIN-PARA.                                             
+     PERFORM ACCEPT-PARA.                               
+     PERFORM COMP-PARA.                                 
+     STOP RUN.                                          
+ ACCEPT-PARA.                                           
+     ACCEPT INP-CHAR.                                   
+ COMP-PARA.                                             
+     IF VOWEL                                           
+        DISPLAY "THE GIVEN CHARACTER IS A VOWEL!"       
+     ELSE IF CONSONANT                                  
+        DISPLAY "THE GIVEN CHARACTER IS A CONSONENT!"   
+     ELSE IF DIGIT                                      
+        DISPLAY "THE GIVEN CHARACTER IS A DIGIT!"       
+     ELSE                                               
+       DISPLAY "THE GIVEN CHARACTER IS AN INVALID CHARACTER!"   
+    END-IF.
+
+        **========**   
+(7)
+
+IDENTIFICATION DIVISION.                                 
+PROGRAM-ID. PRG25.                                       
+ENVIRONMENT DIVISION.                                    
+DATA DIVISION.                                           
+WORKING-STORAGE SECTION.                                 
+01 INP-AGE          PIC 999.                             
+   88 MINOR         VALUE IS 1 THRU 18.                  
+   88 MAJOR         VALUE IS 18 THRU 30.                 
+   88 MIDDLE-AGE    VALUE IS 30 THRU 40.                 
+   88 OLD-AGE       VALUE IS 41 THRU 60.                 
+   88 SR-CITIZEN    VALUE IS 60 THRU 100.                
+77 AMOUNT           PIC 9(5).                            
+77 RETURNS          PIC 9(5)V9(5).                       
+PROCEDURE DIVISION.                    
+MAIN-PARA.                             
+   PERFORM ACCEPT-PARA.                
+   PERFORM COMP-PARA.                  
+   PERFORM DISP-PARA.                  
+   STOP RUN.                           
+ACCEPT-PARA.                           
+   ACCEPT INP-AGE.                     
+   ACCEPT AMOUNT.                      
+COMP-PARA.                                                
+   IF MINOR                                               
+      COMPUTE RETURNS = AMOUNT + ( ( 7 / 100 ) * AMOUNT)  
+   ELSE IF MAJOR                                          
+      COMPUTE RETURNS = AMOUNT + ( ( 9 / 100 ) * AMOUNT)  
+   ELSE IF MIDDLE-AGE                                     
+      COMPUTE RETURNS = AMOUNT + ( ( 10 / 100 ) * AMOUNT) 
+   ELSE IF OLD-AGE                                        
+      COMPUTE RETURNS = AMOUNT + ( ( 11 / 100 ) * AMOUNT)
+   ELSE                                                    
+      COMPUTE RETURNS = AMOUNT + ( ( 12 / 100 ) * AMOUNT)  
+   END-IF.                                                 
+DISP-PARA.                                                 
+   DISPLAY INP-AGE.                                        
+   DISPLAY AMOUNT.                                         
+   DISPLAY RETURNS.        
+
+        **========**   
+
+******************************************************
+TABLE HANDLING
+******************************************************
+
+(1) SUM OF 10 NOS
+
+IDENTIFICATION DIVISION.                                   
+PROGRAM-ID. PRG25.                                         
+ENVIRONMENT DIVISION.                                      
+DATA DIVISION.                                             
+WORKING-STORAGE SECTION.                                   
+01 MAX-NUM.                                                
+    05 NUM        PIC 9(2) OCCURS 5 TIMES.                 
+77 IDX            PIC 9(2) VALUE 1.                        
+77 TOTAL          PIC 9(2) VALUE 0.                        
+PROCEDURE DIVISION.                                        
+MAIN-PARA.                                                 
+    PERFORM ACCEPT-PARA.                                   
+    PERFORM COMP-PARA.                                     
+    STOP RUN.                                              
+ACCEPT-PARA.                                               
+    PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 5 
+
+        **========**   
+
+(2) NUMBERS DIVISIBLE BY 3 
+
+IDENTIFICATION DIVISION.                                      
+PROGRAM-ID. PRG25.                                            
+ENVIRONMENT DIVISION.                                         
+DATA DIVISION.                                                
+WORKING-STORAGE SECTION.                                      
+01 MAX-NUM.                                                   
+    05 NUM        PIC 9(2) OCCURS 50 TIMES.                   
+77 IDX            PIC 9(2) VALUE 1.                           
+77 REM            PIC 9(2).                                   
+77 QUO            PIC 9(2).                                   
+PROCEDURE DIVISION.                                           
+MAIN-PARA.                                                    
+    PERFORM ACCEPT-PARA.                                      
+    PERFORM COMP-PARA.                                        
+    STOP RUN.                                                 
+ACCEPT-PARA.                                                  
+    PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 50            
+       ACCEPT NUM(IDX)                                       
+    END-PERFORM.                                             
+COMP-PARA.                                                   
+    PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 50            
+       DIVIDE0D NUM(IDX) BY 3 HAVING QUO REMAINDER REM        
+       IF REM = 0                                            
+          DISPLAY NUM(IDX)                                   
+       END-IF                                                
+    END-PERFORM.                                             
+    DISPLAY TOTAL.
+
+        **========**   
+
+(3) BIIGEST OF N GIVEN NUMBERS
+
+IDENTIFICATION DIVISION.                                       
+PROGRAM-ID. PRG25.                                             
+ENVIRONMENT DIVISION.                                          
+DATA DIVISION.                                                 
+WORKING-STORAGE SECTION.                                       
+01 MAX-NUM.                                                    
+    05 NUM        PIC 9(2) OCCURS 5 TIMES.                     
+77 IDX            PIC 9(2) VALUE 1.                            
+77 MAX            PIC 9(2) VALUE 0.                            
+PROCEDURE DIVISION.                                            
+MAIN-PARA.                                                     
+    PERFORM ACCEPT-PARA.                                       
+    PERFORM COMP-PARA.                                         
+    STOP RUN.                                                  
+ACCEPT-PARA.                                                   
+    PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 5              
+       ACCEPT NUM(IDX)                                         
+    END-PERFORM.                                               
+COMP-PARA.                                                     
+    PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 5              
+       IF NUM(IDX) > MAX                                       
+          MOVE NUM(IDX) TO MAX                                 
+       END-IF                                                  
+    END-PERFORM.                                               
+    DISPLAY MAX.
+
+        **========**   
+(4) NUMBER OF EVE ANA ODD NOS, SUM OF EVEN AND ODD NOS
+
+IDENTIFICATION DIVISION.                                    
+PROGRAM-ID. PRG25.                                          
+ENVIRONMENT DIVISION.                                       
+DATA DIVISION.                                              
+WORKING-STORAGE SECTION.                                    
+01 EVEN-ODD.                                                
+    05 NUM        PIC 9(1) OCCURS 100 TIMES.                
+77 SUM-EVEN       PIC 9(4) VALUE 0.                         
+77 SUM-ODD        PIC 9(4) VALUE 0.                         
+77 IDX            PIC 9(3) VALUE 1.                         
+77 QUO            PIC 9(3).                                 
+77 REM            PIC 9(3).                                 
+PROCEDURE DIVISION.                                         
+MAIN-PARA.                                                  
+     PERFORM COMP-PARA.                                   
+     STOP RUN.                                            
+ COMP-PARA.                                               
+     PERFORM VARYING IDX FROM 1 BY 1 UNTIL IDX > 100      
+        DIVIDE IDX BY 2 GIVING QUO REMAINDER REM          
+        IF REM = 0                                        
+           COMPUTE SUM-EVEN = SUM-EVEN + IDX              
+        ELSE                                              
+           COMPUTE SUM-ODD = SUM-ODD  + IDX               
+        END-IF                                            
+     END-PERFORM.                                         
+     DISPLAY "SUM EVEN" SUM-EVEN.                         
+     DISPLAY "SUM ODD" SUM-ODD.
+
+        **========**   
+
+******************************************************
+SEARCHING ARRAY ELEMENTS
+******************************************************
+
+(1) SEARCH GIVEN ELEMENT IN A ARRAY USING SEARCH AND SEARCH ALL COMMAND
+
+77 ID      PIC 9(4).
+01 STUDENT-DATA.
+   05 STUDENT-ARRAY OCCURS 500 TIMES 
+                    ASCENDING KEY IS STUDENT-ID 
+                    INDEXED BY S1.
+      10 STUDENT-ID    PIC 9(04).
+      10 STUDENT-NAME  PIC A(15).
+      10 STUDENT-MARKS PIC 9(03).
+SEARCH STUDENT-ARRAY
+    AT END
+       DISPLAY ‘STUDENT NOT FOUND’.
+    WHEN ID = STUDENT-ID(S1)
+       DISPLAY ‘STUDENT-NAME:’ STUDENT-NAME(S1)
+       DISPLAY ‘STUDENT-MARKS:’ STUDENT-MARKS(S1)
+
+************************************************************************************************************
+************************************************************************************************************
+

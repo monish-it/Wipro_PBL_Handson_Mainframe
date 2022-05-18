@@ -1,0 +1,91 @@
+Q1 
+
+CODE:
+IDENTIFICATION DIVISION.                 
+PROGRAM-ID. COBWRU.                      
+DATA DIVISION.                           
+WORKING-STORAGE SECTION.                 
+   COPY DFHAID.                          
+01 EMP-REC.                              
+  02 EMP-NO PIC 9(3).  
+  02 EMP-NAME PIC X(3).                  
+  02 EMP-SAL PIC 9(6)                    
+  02 EMP-LOC PIC X(5).                   
+77 WS-RESPC PIC S9(8) COMP.              
+77 WS-STR PIC X(20).                     
+PROCEDURE DIVISION.                      
+    MOVE 102 TO EMP-ENO.                 
+    EXEC CICS READ                       
+        DATASET('INFILE1')                
+        INTO(EMP-REC)                    
+        LENGTH(LENGTH OF EMP-REC)        
+        RIDFLD(EMP-ENO))                 
+        UPDATE                           
+        RESP(WS-RESPC)                   
+    END-EXEC.                            
+    IF (WS-RESPC) = DFHRESP(NORMAL)      
+        EXEC CICS SEND TEXT   
+            FROM(EMP-ENAME)                  
+        END-EXEC                             
+    ELSE                                     
+        MOVE 'RECORD NOT FOUND' TO WS-STR    
+        EXEC CICS SEND TEXT                  
+            FROM(WS-STR)                     
+        END-EXEC                             
+    END-IF.                                  
+    MOVE 130 TO EMP-NO. 
+    MOVE 'HUS' TO EMP-ENAME.
+	MOVE 456789 TO EMP-SAL.
+    MOVE 'DEL' TO EMP-LOC.	
+    EXEC CICS WRITE                          
+        DATASET('INFILE1')                    
+        LENGTH(LENGTH OF EMP-REC)            
+        FROM(EMP-REC)                        
+        RIDFLD(EMP-ENO))                     
+        RESP(WS-RESPC)                       
+    END-EXEC.                                
+    IF (WS-RESPC) = DFHRESP(NORMAL)          
+        EXEC CICS SEND TEXT                  
+            FROM('WRITE TO FILE DONE')       
+        END-EXEC                             
+    ELSE                                     
+        MOVE 'RECORD NOT FOUND' TO WS-STR    
+        EXEC CICS SEND TEXT                  
+            FROM(WS-STR)                     
+        END-EXEC                             
+    END-IF.                                  
+    MOVE 105 TO EMP-NO.                      
+    EXEC CICS DELETE                         
+        DATASET('INFILE1')                    
+        RIDFLD(EMP-ENO)                     
+        RESP(WS-RESPC)                       
+    END-EXEC.                                
+    IF (WS-RESPC) = DFHRESP(NORMAL)          
+        EXEC CICS SEND TEXT                  
+            FROM('DELTED ONE RECORD')        
+        END-EXEC                             
+    ELSE                                     
+        MOVE 'RECORD NOT FOUND' TO WS-STR    
+        EXEC CICS SEND TEXT                  
+            FROM(WS-STR)                     
+        END-EXEC                             
+    END-IF. 
+	MOVE 101 TO EMP-NO.
+	EXEC CICS STARTBR
+	    DATASET('INFILE1')
+		RIDFLD(EMP-NO)
+	END-EXEC.
+	MOVE 105 TO EMP-NO.
+    EXEC CICS RESETBR
+	    DATASET('INFILE1')
+		RIDFLD(EMP-NO)
+	END-EXEC.	
+	MOVE 105JEZ656689PUN TO EMP-REC.
+	EXEC CICS REWRITE
+        FILE('INFILE1')
+        FROM(EMP-REC)
+        LENGTH(LENGTH OF EMP-REC)
+    END-EXEC.
+    EXEC CICS                                
+        RETURN                               
+    END-EXEC.                                		

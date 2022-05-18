@@ -1,0 +1,69 @@
+Q1
+IDENTIFICATION DIVISION.             
+PROGRAM-ID. LINKCOD.                 
+DATA DIVISION.                       
+WORKING-STORAGE SECTION.             
+01 WS-STR PIC X(10) VALUE 'HELLO'.   
+PROCEDURE DIVISION.                  
+    EXEC CICS LINK                   
+        PROGRAM ('TKPROG')           
+        COMMAREA (WS-STR)            
+    END-EXEC.                        
+    MOVE 'WORLD' TO WS-STR.          
+    EXEC CICS                        
+        SEND FROM(WS-STR)            
+    END-EXEC.                        
+    EXEC CICS                        
+        RETURN                       
+    END-EXEC.                                                         
+
+**SUBPROGRAM FOR LINK
+
+IDENTIFICATION DIVISION.                  
+PROGRAM-ID. PROG.                         
+DATA DIVISION.                            
+LINKAGE SECTION.                          
+01 DFHCOMMAREA.                           
+  02 LK-STR1 PIC X(10).                   
+PROCEDURE DIVISION.                       
+    EXEC CICS                             
+        SEND FROM(LK-STR1)                
+    END-EXEC.                             
+    EXEC CICS                             
+        RETURN                            
+    END-EXEC.                             
+   
+Q2
+IDENTIFICATION DIVISION.                   
+PROGRAM-ID. XCTLCODE.                      
+DATA DIVISION.                             
+WORKING-STORAGE SECTION.                   
+01 WS-STR PIC X(10) VALUE 'HELLO'.         
+PROCEDURE DIVISION.                        
+    EXEC CICS XCTL                         
+        PROGRAM ('TKPROG1')                
+        COMMAREA (WS-STR)                  
+    END-EXEC.                              
+    MOVE 'WORLD' TO WS-STR.                
+    EXEC CICS                              
+        SEND FROM(WS-STR)                  
+    END-EXEC.                              
+    EXEC CICS                              
+        RETURN                             
+    END-EXEC.                              
+
+**SUBPROGRAM FOR XCTL
+
+IDENTIFICATION DIVISION.       
+PROGRAM-ID. PROG.              
+DATA DIVISION.                 
+LINKAGE SECTION.               
+01 DFHCOMMAREA.                
+  02 LK-STR1 PIC X(10).        
+PROCEDURE DIVISION.            
+    EXEC CICS                  
+        SEND FROM(LK-STR1)     
+    END-EXEC.                  
+    EXEC CICS                  
+        RETURN                 
+    END-EXEC.                  

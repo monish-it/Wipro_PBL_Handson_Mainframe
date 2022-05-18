@@ -1,0 +1,65 @@
+#INTORDUCTION TO CURSORS.
+
+Q1. Display all the records of the Employees_TB in the spool area
+
+ans--   
+	IDENTIFICATION  DIVISION.
+             PROGRAM-ID .  INSPGM.
+             ENVIONMENT  DIVISION.
+            DATA DIVISION.
+            WORKING-STORAGE SECTION.
+                EXEC SQL
+                           DELCARE C1 CURSOR
+                              FOR
+                               SELECT * FROM Employees_TB
+                END-EXEC.
+            PROCEDURE DIVISION.
+                           EXEC SQL
+                                     OPEN C1
+                         END EXEC.
+                           EXEC SQL
+                                     FETCH C1
+                                       INTO 
+                                           :HV-ENO.
+                                            :HV-ENAME.
+		       :HV-SAL.    
+		       :HV-DEPT_ID.
+                                            :HV-LOC    .             
+                      END EXEC.
+	EXEC SQL
+                                    CLOSE  C1
+                         END EXEC.
+	 
+Q2.Display the records of the employees working in (Department Id=10 and Location= Chennai ) 
+from the Employees _TB in the Spool area.
+
+IDENTIFICATION  DIVISION.
+             PROGRAM-ID .  INSPGM.
+             ENVIONMENT  DIVISION.
+            DATA DIVISION.
+            WORKING-STORAGE SECTION.
+                EXEC SQL
+                           DELCARE C1 CURSOR
+                              FOR
+                               SELECT * FROM Employees_TB WHERE (DEPT_ID=10 AND LOC='CHENNAI');
+                END-EXEC.
+            PROCEDURE DIVISION.
+                           EXEC SQL
+                                     OPEN C1
+                         END EXEC.
+                           EXEC SQL
+                                     FETCH C1
+                                       INTO 
+                                           :HV-ENO.
+                                            :HV-ENAME.
+		       :HV-SAL. 
+                                            :HV-DEPT_ID.
+                                            :HV-LOC .         
+                      END EXEC.
+	EXEC SQL
+                                    CLOSE  C1
+                         END EXEC.
+	 
+                                      
+
+            

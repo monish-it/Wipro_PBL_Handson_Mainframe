@@ -1,0 +1,170 @@
+#EMBEDDED SQL
+
+Q1.Create a cobal application to accept data from sysin and insert into employees TB
+ 
+ANS---- IDENTIFICATION  DIVISION.
+             PROGRAM-ID .  INSPGM.
+             ENVIONMENT  DIVISION.
+             DATA DIVISION.
+            WORKING -STORAGE SECTION.
+                     EXEC SQL
+                              INCLUDE SQLCA
+                     END-EXEC.    
+                       EXEC SQL
+                              INCLUDE EMPTB
+                     END-EXEC. 
+              77 WS-ENO PIC X(3).  
+              77 WS-ENAME PIC X(3).  
+              77 WS-SAL PIC 9(4).  
+            PROCEDURE DIVISION.
+             MAIN-PARA.
+                      PERFORM ACC-PARA.
+                      PERFORM MOVE-PARA.
+                      PERFORM  INS-PARA.
+                      STOP RUN.
+   
+              ACC-PARA.
+                         ACCEPT WS-ENO.
+                         ACCEPT WS-ENAME.
+                          ACCEPT WS-SAL.
+               MOVE-PARA.
+                          MOVE WS-ENO                                TO     HV-ENO.
+                          MOVE LENGTH OF WS-ENAME     TO   HV-ENAME-LEN.
+                           MOVE WS-ENAME                            TO   HV-ENAME-TEXT.
+                           MOVE WS-SAL                                    TO   HV-SAL.    
+               INS-PARA.
+                       EXEC SQL
+                                INSERT INTO Employees_Tb(ENO,ENAME,SAL)
+	               VALUES (
+                                               :HV-ENO,
+		           :HV-ENAME,
+                                                :HV-SAL)
+                      END-EXEC.
+               IF SQLCODE=0
+                          DISPLAY   ''SUCCESS''
+             ELSE
+                   DISPLAY  ''FAILURE''   SQLCODE
+             END IF.
+
+Q2.Create a cobol application to accept data from sysin and update the salary of the given emp no into employees _Tb
+
+
+ANS---- IDENTIFICATION  DIVISION.
+             PROGRAM-ID .  INSPGM.
+             ENVIONMENT  DIVISION.
+             DATA DIVISION.
+            WORKING -STORAGE SECTION.
+                     EXEC SQL
+                              INCLUDE SQLCA
+                     END-EXEC.    
+                       EXEC SQL
+                              INCLUDE EMPTB
+                     END-EXEC. 
+              77 WS-ENO PIC X(3).  
+              77 WS-ENAME PIC X(3).  
+              77 WS-SAL PIC 9(4).  
+            PROCEDURE DIVISION.
+             MAIN-PARA.
+                      PERFORM ACC-PARA.
+                      PERFORM MOVE-PARA.
+                      PERFORM  INS-PARA.
+                      STOP RUN.
+   
+              ACC-PARA.
+                           ACCEPT WS-SAL.
+               MOVE-PARA
+                           MOVE WS-SAL     TO   HV-SAL.    
+               INS-PARA.
+                       EXEC SQL
+                                UPDATE INTO EMPLOYEES_TB SET(SALARY=SALARY+2) WHERE EMPLOYEE_NO=12;
+	              
+                      END-EXEC.
+               IF SQLCODE=0
+                          DISPLAY   ''SUCCESS''
+             ELSE
+                   DISPLAY  ''FAILURE''   SQLCODE
+             END IF.
+
+
+
+Q3.Create a cobol program to accept an empno fros sysin and display that employee's record
+
+ANS---- IDENTIFICATION  DIVISION.
+             PROGRAM-ID .  INSPGM.
+             ENVIONMENT  DIVISION.
+             DATA DIVISION.
+            WORKING -STORAGE SECTION.
+                     EXEC SQL
+                              INCLUDE SQLCA
+                     END-EXEC.    
+                       EXEC SQL
+                              INCLUDE EMPTB
+                     END-EXEC. 
+              77 WS-ENO PIC X(3).  
+              77 WS-ENAME PIC X(3).  
+              77 WS-SAL PIC 9(4).  
+            PROCEDURE DIVISION.
+             MAIN-PARA.
+                      PERFORM ACC-PARA.
+                      PERFORM MOVE-PARA.
+                      PERFORM  INS-PARA.
+                      STOP RUN.
+   
+              ACC-PARA.
+                         ACCEPT WS-ENO.
+                         
+               MOVE-PARA.
+                          MOVE WS-ENO                                TO     HV-ENO.
+                          
+               INS-PARA.
+                       EXEC SQL
+                                SELECT *  INTO EMPLOYEES_TB  WHERE EMPLOYEE_NO= ENO;
+	              
+                      END-EXEC.
+               IF SQLCODE=0
+                          DISPLAY   ''SUCCESS''
+             ELSE
+                   DISPLAY  ''FAILURE''   SQLCODE
+             END IF.
+
+
+Q4.Create a cobal program to accept an empno from sysin and delete the record from the table
+
+
+ANS---- IDENTIFICATION  DIVISION.
+             PROGRAM-ID .  INSPGM.
+             ENVIONMENT  DIVISION.
+             DATA DIVISION.
+            WORKING -STORAGE SECTION.
+                     EXEC SQL
+                              INCLUDE SQLCA
+                     END-EXEC.    
+                       EXEC SQL
+                              INCLUDE EMPTB
+                     END-EXEC. 
+              77 WS-ENO PIC X(3).  
+              77 WS-ENAME PIC X(3).  
+              77 WS-SAL PIC 9(4).  
+            PROCEDURE DIVISION.
+             MAIN-PARA.
+                      PERFORM ACC-PARA.
+                      PERFORM MOVE-PARA.
+                      PERFORM  INS-PARA.
+                      STOP RUN.
+   
+              ACC-PARA.
+                         ACCEPT WS-ENO.
+                         
+               MOVE-PARA.
+                          MOVE WS-ENO    TO     HV-ENO.
+                          
+               INS-PARA.
+                       EXEC SQL
+                                DELETE FROM  EMPLOYEES_TB  WHERE EMPLOYEE_NO= ENO;
+	              
+                      END-EXEC.
+               IF SQLCODE=0
+                          DISPLAY   ''SUCCESS''
+             ELSE
+                   DISPLAY  ''FAILURE''   SQLCODE
+             END IF.

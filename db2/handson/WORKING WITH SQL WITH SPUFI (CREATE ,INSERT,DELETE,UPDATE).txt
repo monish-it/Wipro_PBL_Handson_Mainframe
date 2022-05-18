@@ -1,0 +1,135 @@
+# WORKING WITH SQL WITH SPUFI (CREATE ,INSERT,DELETE,UPDATE)
+
+Q1. Create a table named
+
+DEPARTMENTS_TB with the following details
+ Department _Id NUMERIC(4) NOT NULL and PRIMARY KEY 
+Department _Name VARCHAR(20) NOT NULL 
+Location VARCHAR(20)
+
+
+CTREATE TABLE DEPARTMENTS_TB (
+                           Department _Id INT NOT NULL , 
+                          Department _Name VARCHAR(20) NOT NULL,
+                          Location VARCHAR(20)
+                           PRIAMRY KEY( Department _Id)
+);
+
+
+
+Q2. Insert a record to the DEPARTMENTS_TB. Identity your observations
+
+     INSERT INTO DEPARTMENTS_TB VALUES(1,'IT','NOIDA');
+
+
+Q3.  create unique index on DEPARTMENTS_TB
+
+      CREATE UNIQUE INDEX IND_DNO ON DEPARTMENTS_TB(Department_Id);
+
+
+Q5.Create a table named EMPLOYEES_TB
+
+with the following details 
+
+Employee No Numeric (5) NOT NULL and PRIMARY KEY
+
+Age numeric(3) should be within 18 and 60 
+
+Hiredate Date default current
+
+Employee Name Varchar(20) NOT NULL 
+
+Phone Number numeric (10)  system date 
+Job Profile varchar (10) 
+Department id numeric(4)
+
+ foreign key (departments_tb table's  department id)
+
+Salary numeric (9,2)
+
+Commission numeric (9,2)
+
+ans---
+
+CREATE TABLE EMPLOYEES_TB(
+	Employee _No INT NOT NULL, 
+	Age NUMERIC (3) BETWEEN 18 AND 60,
+                  Hiredate Date  NOT NULL WITH DEFAULT,
+                   Employee_Name Varchar(20) NOT NULL ,
+                  Phone_Number numeric (10),
+                  Job_Profile varchar (10) ,
+                   Department_Id numeric(4),
+                   Salary numeric (9,2)  ,
+                   Commission numeric (9,2),
+                   primary key(Employee_No),
+                   FOREIGN KEY DEPT (Department_Id )
+           REFERENCES DEPARTMENT_TB ON DELETE NO ACTION
+
+);
+
+Q6.  CREATE A UNIQUE INDEX ON EMPLOYEES_TB
+
+CREATE UNIQUE INDEX IND_EMP  ON EMPLOYEES_TB(Employee_No);
+
+
+Q7.INSERT THE FOLLOWING RECORDS
+
+   INSERT INTO EMPLOYEES_TB(Employee_No, Employee_Name ,Phone_number, Age, hire_Date ,
+Job _Profile, Department _Id, Salary,Commission) 
+VALUES (101,'DIANA',590.423.5567,0,'7-FEB-99,'AD-MAN',10,38000);
+
+INSERT INTO EMPLOYEES_TB(Employee_No, Employee_Name ,Phone_number, Age, hire_Date ,
+Job _Profile, Department _Id, Salary,Commission) 
+VALUES (102,'NANCY',515.124.4569,21,'17-AUG-94','AD-CLK',10,50000);
+
+Q8. Observe the behaviour. Test the inserted data through select statement.
+
+    SELECT * FROM EMPLOYEES_TB.
+
+Q10. insert a record 106 Rosy 890.435.8866 28 AD REP 10 25000 takecare hire_date takes default value and commission is null
+
+
+INSERT INTO EMPLOYEES_TB VALUES(106 ,'Rosy', 890.435.8866 ,28,' AD REP' ,10, 25000);
+
+Q11.update job profile of Ismael to SP MAN.
+  
+ UPDATE  EMPLOYEES_TB SET(job_profile ='SP MAN') WHERE job_profile = Ismael;
+
+
+Q12.Update Daniel's salary to 33000 and commission to 0.78
+
+UPDATE  EMPLOYEES_TB SET(salary =33000,commission=0.78) WHERE  employees_name = 'Daniel';
+
+Q14. DELETE RECORD 102. 
+  
+ delete from EMPLOYEES_TB WHERE Employees_no=102;
+
+
+Q15. write a query to increase all employees salary by 3% and for those who have commission their commision by 5%.
+
+      UPDATE  EMPLOYEES_TB SET(salary=salary*0.03,commission=commission*0.05) WHERE  employees_name = 'Daniel';
+
+
+
+Q17.Create a table called Employees _Exited! in the same structure of the Employees _TB.
+
+CREATE TABLE EMPLOYEES_EXITED
+	Employee _No INT NOT NULL, 
+	Age NUMERIC (3) BETWEEN 18 AND 60,
+                  Hiredate Date  NOT NULL WITH DEFAULT,
+                   Employee_Name Varchar(20) NOT NULL ,
+                  Phone_Number numeric (10),
+                  Job_Profile varchar (10) ,
+                   Department_Id numeric(4),
+                   Salary numeric (9,2)  ,
+                   Commission numeric (9,2),
+                   primary key(Employee_No),
+                   FOREIGN KEY DEPT (Department_Id )
+           REFERENCES DEPARTMENT_TB ON DELETE NO ACTION
+
+);
+
+
+
+
+

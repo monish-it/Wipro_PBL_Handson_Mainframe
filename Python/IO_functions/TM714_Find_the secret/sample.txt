@@ -1,0 +1,7 @@
+car has 4 wheels.
+car has one stearing wheel.
+car have space for 5 people including driver.
+car can be modified according to the user.
+most car uses diesel has fuel.
+electrics car are the fuel.
+tesla eelectric car are most popular.

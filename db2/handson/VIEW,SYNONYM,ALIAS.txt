@@ -1,0 +1,41 @@
+#VIEW,SYNONYM,ALIAS
+
+Q1.create a view called sample_employee with employee _No. employee _name.salary
+department columns . Check the view with a select
+
+db2 create view view_employee(employee_No. employee_name,salary) 
+as select employee_No. employee_name,salary from 
+sample _employee
+
+Q2. Insert a record to employee_tb table. Check both the table and the view with select
+
+select * from employee_tb ;
+
+db2 create view view_e1(employee_No. employee_name,salary) 
+as select employee_No. employee_name,salary from 
+employee_tb
+
+
+Q3.Insert a record to the view and check both the table and view to see the update
+
+INSERT INTO [e1].[USCustomerView](id, customer_name, city, country)
+VALUES(11, 'Jarrad Richings', 'Los Angeles', 'United States')
+
+
+Q5.Insert a record to the view and check. both the table and view to see the update
+
+INSERT INTO [e2].[USCustomerView](id, customer_name, city, country)
+VALUES(12, 'Richard Richings', 'New York', 'United States')
+
+
+Q7.Insert a record to view of employee department 20 Check both the table and the view with select
+
+INSERT INTO [e3].[EmployeeView](id, employee_name, department_id, country)
+VALUES(13, 'Richard Richings', '20', 'United States')
+
+
+Q8.Insert a record to view of employee department 10 Check both the table and the view with select
+
+INSERT INTO [e3].[EmployeeView](id, employee_name, department_id, country)
+VALUES(14, 'Kishor', '10', 'United States')
+

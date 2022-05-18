@@ -1,0 +1,206 @@
+Q1
+CODE:
+
+MAP:
+
+MAPARR1 DFHMSD TYPE=&SYSPARM,LANG=COBOL,MODE=INOUT,CTRL=FREEKB,        *
+               STORAGE=AUTO,TIOAPFX=YES                                 
+ARHMAP  DFHMDI SIZE=(24,80),LINE=1,COLUMN=1                             
+        DFHMDF POS=(06,35),INITIAL='ARITHMETIC CALCULATION',           *
+               LENGTH=25,ATTRB=PROT                                     
+        DFHMDF POS=(10,20),INITIAL='NUM1    : ',                       *
+               LENGTH=10,ATTRB=PROT                                     
+VALA    DFHMDF POS=(10,35),INITIAL='---',LENGTH=3,                     *
+               ATTRB=UNPROT,PICIN='9(3)'                                
+        DFHMDF POS=(11,20),INITIAL='NUM2    : ',                       *
+               LENGTH=10,ATTRB=PROT                                     
+VALB    DFHMDF POS=(11,35),INITIAL='---',LENGTH=3,                     *
+               ATTRB=UNPROT,PICIN='9(3)'                                
+        DFHMDF POS=(12,20),INITIAL='RES     : ',                       *
+               LENGTH=10,ATTRB=PROT                                     
+TOTAL   DFHMDF POS=(12,35),INITIAL='----',LENGTH=4,                    *
+               ATTRB=UNPROT,PICOUT='9(4)' 
+        DFHMDF POS=(14,20),INITIAL='F1->ADD : ',                       *
+               LENGTH=10,ATTRB=PROT 
+        DFHMDF POS=(15,20),INITIAL='F2->SUB : ',                       *
+               LENGTH=10,ATTRB=PROT 
+        DFHMDF POS=(16,20),INITIAL='F3->MULT: ',                       *
+               LENGTH=10,ATTRB=PROT 			   
+        DFHMSD TYPE=FINAL      
+               END   
+
+COBOL-CICS CODE:
+
+IDENTIFICATION DIVISION.                     
+PROGRAM-ID. ADDPGM.                          
+DATA DIVISION.                               
+WORKING-STORAGE SECTION.                     
+    COPY MAPADD1. 
+	COPY DFHAID.
+77 WS-STR PIC X(10).	
+PROCEDURE DIVISION. 
+MAIN-PARA.
+    IF EIBCALEN = 0
+	  PERFORM SEND-PARA
+	ELSE
+      PERFORM RECEIVE-PARA
+      PERFORM SEND-PARA
+	END-IF.
+	PERFORM EXIT-PARA.
+SEND-PARA.
+    MOVE LOW-VALUES TO ARHMAPO.	
+    EXEC CICS                                
+        SEND MAP('ARHMAP')                   
+             MAPSET('MAPADD1')               
+             FROM(ARHMAPO)                   
+             ERASE                           
+    END-EXEC.
+    MOVE 'HI' TO WS-CA.    
+    EXEC CICS              
+        RETURN             
+        TRANSID('AD01')    
+        COMMAREA(WS-CA)    
+    END-EXEC.              
+RECEIVE-PARA.	
+    EXEC CICS                                
+        RECEIVE MAP('ARHMAP')                
+             MAPSET('MAPADD1')               
+             INTO(ARHMAPI)                   
+    END-EXEC.
+	EVALUATE EIBAID
+      WHEN DFHAF1
+         COMPUTE TOTALO = VALAI + VALBI
+      WHEN DFHPF2
+         COMPUTE TOTALO = VALAI - VALBI
+      WHEN DFHPF3
+         COMPUTE TOTALO = VALAI * VALBI
+    END-EVALUATE. 
+PERFORM EXIT-PARA.
+    MOVE 'END' TO WS-CA.    
+    EXEC CICS              
+        SEND CONTROL       
+        CURSOR(750)   
+        ERASE         
+    END-EXEC.              
+    EXEC CICS                
+        SEND FROM (WS-STR)   
+    END-EXEC.                
+	EXEC CICS                
+		RETURN               
+	END-EXEC.
+
+
+
+Q2.
+
+MAP
+
+EMPSCR  DFHMSD TYPE=&SYSPARM,LANG=COBOL,MODE=INOUT,CTRL=FREEKB,        *
+               STORAGE=AUTO,TIOAPFX=YES                                 
+EMPMAP  DFHMDI SIZE=(24,80),LINE=1,COLUMN=1                             
+        DFHMDF POS=(06,35),INITIAL='EMPLOYEE DATA',                    *
+               LENGTH=25,ATTRB=PROT                                     
+        DFHMDF POS=(10,20),INITIAL='EMPLOYEE NAME    : ',              *
+               LENGTH=19,ATTRB=PROT                                     
+EMPN    DFHMDF POS=(10,35),INITIAL='__________',LENGTH=10,             *
+               ATTRB=UNPROT,PICIN='X(10)'                                
+        DFHMDF POS=(11,20),INITIAL='EMPLOYEE NUMBER  : ',              *
+               LENGTH=19,ATTRB=PROT                                     
+EMPP    DFHMDF POS=(11,35),INITIAL='__________',LENGTH=10,             *
+               ATTRB=UNPROT,PICIN='9(10)'                                                   
+        DFHMDF POS=(12,20),INITIAL='EMPLOYEE SALARY  : ',              *
+               LENGTH=19,ATTRB=PROT                                       
+EMPS    DFHMDF POS=(12,35),INITIAL='______',LENGTH=6,                  *
+               ATTRB=UNPROT,PICIN='9(6)' 
+        DFHMDF POS=(13,20),INITIAL='F1->ADD DETAILS',                  *
+               LENGTH=10,ATTRB=PROT                                       
+MSG     DFHMDF POS=(16,35),INITIAL='',LENGTH=40,                       *
+               ATTRB=PROT,PICOUT='X(40)' 			   
+        DFHMSD TYPE=FINAL      
+               END 
+
+Q3.
+
+CODE:
+
+IDENTIFICATION DIVISION.                     
+PROGRAM-ID. ADDEMP.                          
+DATA DIVISION.                               
+WORKING-STORAGE SECTION.                     
+    COPY EMPSCR.
+    COPY DFHAID.
+    EXEC SQL
+        INCLUDE SQLCA
+    END-EXEC. 		
+	EXEC SQL
+        INCLUDE EMPTB 
+	END-EXEC. 
+77 WS-CA PIC X(10).	
+PROCEDURE DIVISION. 
+MAIN-PARA.
+    IF EIBCALEN = 0
+	  PERFORM SEND-PARA
+	ELSE
+      PERFORM RECEIVE-PARA
+      PERFORM SEND-PARA
+	END-IF.
+	PERFORM EXIT-PARA.
+SEND-PARA.
+    MOVE LOW-VALUES TO ARHMAPO.	
+    EXEC CICS                                
+        SEND MAP('EMPMAP')                   
+             MAPSET('EMPSCR')               
+             FROM(EMPMAPO)                   
+             ERASE                           
+    END-EXEC.
+    MOVE 'HI' TO WS-CA.    
+    EXEC CICS              
+        RETURN             
+        TRANSID('GD01')    
+        COMMAREA(WS-CA)    
+    END-EXEC.              
+RECEIVE-PARA.	
+    EXEC CICS                                
+        RECEIVE MAP('EMPMAP')                
+             MAPSET('EMPSCR')               
+             INTO(EMPMAPI)                   
+    END-EXEC.
+	EVALUATE EIBAID
+      WHEN DFHAF1
+         PERFORM INSERT-PARA
+      WHEN OTHER
+	     MOVE 'ERROR' TO MSGO 
+    END-EVALUATE. 
+PERFORM INSERT-PARA.
+    MOVE EMPNI TO HV-EMP-NAME-TEXT.
+    MOVE LENGTH OF EMPNI TO HV-EMP-NAME-LEN.
+	MOVE EMPPI TO HV-EMP-PHONE.
+    MOVE EMPSI TO HV-EMP-SALARY.
+    INSERT INTO EMPLOYEE_TB VALUES(:HV-EMP-NAME,:HV-EMP-PHONE,:HV-EMP-SALARY)
+    IF SQLCODE = 0
+      MOVE 'ADDED EMPLOYEE' TO MSGO
+    ELSE
+      MOVE 'ERROR IN ADDING CUSTOMER' TO MSGO
+    END-IF.	  
+PERFORM EXIT-PARA.
+    MOVE 'END' TO WS-CA.    
+    EXEC CICS              
+        SEND CONTROL       
+        CURSOR(750)   
+        ERASE         
+    END-EXEC.              
+    EXEC CICS                
+        SEND FROM (WS-STR)   
+    END-EXEC.                
+	EXEC CICS                
+		RETURN               
+	END-EXEC.
+
+
+	
+
+			   
+
+	
+           
+ 

@@ -1,0 +1,12 @@
+#SET OPERATOR(UNION AND UNION ALL)
+
+Q1.Create a query to display the all the employees names and their contact number: 
+from both the Employees Tb and Employees. _Exited table
+
+SELECT employees _name,Phone_no FROM Employees_Tb   as a UNION SELECT mployees _name,
+      Phone_no FROM   Employees. _Exited as b
+
+Q2. modify the above query to include even duplicate names
+
+SELECT employees _name,Phone_no FROM Employees_Tb   as a UNION  ALL SELECT mployees _name,
+      Phone_no FROM   Employees. _Exited as b

@@ -1,0 +1,388 @@
+===========================================================================
+VSAM CLUSTER
+===========================================================================
+(1)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//SYSPRINT DD  SYSOUT = *
+//SYSIN    DD  *
+   DEFINE CLUSTER (NAME(MY.VSAM.ESDSFILE)  -
+   NONINDEXED                              -
+   RECSZ(80 80)                            -
+   TRACKS(1,1)                             -
+   CISZ(4096)                              -                            
+   FREESPACE(3 3) )                        -
+   DATA (NAME(MY.VSAM.ESDSFILE.DATA))      
+/*
+
+(2)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//SYSPRINT DD  SYSOUT = *
+//SYSIN    DD  *
+   DEFINE CLUSTER (NAME(MY.VSAM.RRDSFILE)  -
+   NUMBERED                                -
+   RECSZ(80 80)                            -
+   TRACKS(1,1)                             -
+   REUSE                                   - 
+   FREESPACE(3 3) )                        -
+   DATA (NAME(MY.VSAM.RRDSFILE.DATA))      
+/*
+
+(3)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//SYSPRINT DD  SYSOUT = *
+//SYSIN    DD  *
+   DEFINE CLUSTER (NAME(MY.VSAM.KSDSFILE)  -
+   INDEXED                                 -
+   KEYS(6 1)                              -  
+   RECSZ(80 80)                            -
+   TRACKS(1,1)                             -
+   CISZ(4096)                              -                            
+   FREESPACE(3 3) )                        -
+   DATA (NAME(MY.VSAM.KSDSFILE.DATA))      -
+   INDEX (NAME(MY.VSAM.KSDSFILE.INDEX))    -
+/*
+
+(4)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//SYSPRINT DD  SYSOUT = *
+//SYSIN    DD  *
+   DEFINE CLUSTER (NAME(MY.VSAM.KSDSFILE)  -
+   INDEXED                                 -
+   RECSZ(80 80)                            -
+   TRACKS(1,1)                             -
+   KEYS(5  0)                              -
+   CISZ(4096)                              -                            
+   FREESPACE(3 3) )                        -
+   DATA (NAME(MY.VSAM.KSDSFILE.DATA))      -
+   INDEX (NAME(MY.VSAM.KSDSFILE.INDEX))
+/*
+
+===========================================================================
+VSAM DATASET
+===========================================================================
+(1)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//IN  DD DSN = MY.VSAM.KSDSFILE,DISP = SHR
+//OUT DD DSN = MY.VSAM1.KSDSFILE,DISP = SHR
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   REPRO INFILE(IN) 
+      OUTFILE(OUT)
+      FROMKEY(KEY1)
+      TOKEY(KEY2)
+/*
+
+(2)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//IN  DD DSN = MY.VSAM.KSDSFILE,DISP = SHR
+//OUT DD DSN = MY.VSAM1.KSDSFILE,DISP = SHR
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   REPRO INFILE(IN) 
+      OUTFILE(OUT)
+      FROMADDRESS(AD1)
+      TOADDRESS(AD2)
+/*
+
+(3)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//IN  DD DSN = MY.VSAM.KSDSFILE,DISP = SHR
+//OUT DD DSN = MY.VSAM1.KSDSFILE,DISP = SHR
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   REPRO INFILE(IN) 
+      OUTFILE(OUT)
+      FROMADDRESS(AD1)
+      TOADDRESS(AD2)
+/*
+
+(4)
+//KSDSGDG  EXEC  PGM=IDCAMS                              
+//SYSPRINT DD  SYSOUT=*                                  
+//KSDSFILE DD  DSN=PAYT.PAYROLL.PROCESS.KEYFILE,         
+//             DISP=SHR                                  
+//GDGFILE  DD  DSN=PAYT.PAYROLL.PROCESS.KEYFILE.BKUP(+1),
+//             DISP=(NEW,CATLG),                         
+//             UNIT=SYSDA,SPACE=(CYL,(10,10),RLSE),      
+//             DCB=(MODEL.GDG,RECFM=FB,LRECL=325)        
+//SYSIN    DD  *                                         
+ REPRO INFILE(KSDSFILE) OUTFILE(GDGFILE) -
+ SKIP(5) COUNT(10)       
+/*
+
+(5)
+//WPR062G JOB(WIP),MONI,CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//IN  DD DSN = MY.VSAM.KSDSFILE,DISP = SHR
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+      INFILE(IN)
+      FROMADDRESS(AD1)
+      CHAR
+/*
+
+(7)
+//WPR062G JOB(WIP),MONI,CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//IN  DD DSN = MY.VSAM.RRDSFILE,DISP = SHR
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   PRINT
+      INFILE(IN)
+      CHAR
+/*
+
+(8)
+//WPR062G JOB(WIP),MONI,CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//IN  DD DSN = MY.VSAM.ESDSFILE,DISP = SHR
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   PRINT INFILE(IN) 
+      CHAR
+/*
+
+(9)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//IN  DD DSN = MY.VSAM.KSDSFILE,DISP = SHR
+//OUT DD DSN = MY.VSAM1.KSDSFILE,DISP = SHR
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   REPRO INFILE(IN) 
+      OUTFILE(OUT)
+      FROMADDRESS(AD1)
+      TOADDRESS(AD2)
+      REPLACE
+/*
+
+(10)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//INFILE  DD DSN = MY.PS.PS1,DISP = SHR
+//OUTFILE DD DSN = MY.VSAM1.KSDSFILE,DISP = SHR
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   REPRO INFILE(INFILE) 
+      OUTFILE(OUTFILE)
+/*
+
+(11)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//INFILE  DD DSN = MY.PS.PS1,DISP = SHR
+//OUTFILE DD DSN = MY.VSAM1.RRDSFILE,DISP = SHR
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   REPRO INFILE(INFILE) 
+      OUTFILE(OUTFILE)
+/*
+
+(12)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//INFILE  DD DSN = MY.PS.PS1,DISP = SHR
+//OUTFILE DD DSN = MY.VSAM1.ESDSFILE,DISP = SHR
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   REPRO INFILE(INFILE) 
+      OUTFILE(OUTFILE)
+/*
+
+(13)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//INFILE  DD DSN = MY.PS.KSDS,DISP = SHR
+//OUTFILE DD DSN = MY.VSAM1.RRDSSFILE,DISP = SHR
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   REPRO INFILE(INFILE) 
+      OUTFILE(OUTFILE)
+/*
+
+(14)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//INFILE  DD DSN = MY.PS.KSDS,DISP = SHR
+//OUTFILE DD DSN = MY.VSAM1.ESDSSFILE,DISP = SHR
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   REPRO INFILE(INFILE) 
+      OUTFILE(OUTFILE)
+/*
+
+(15)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//INFILE  DD DSN = MY.PS.ESDS,DISP = SHR
+//OUTFILE DD DSN = MY.VSAM1.RRDSSFILE,DISP = SHR
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   REPRO INFILE(INFILE) 
+      OUTFILE(OUTFILE)
+     REPLACE
+/*
+
+(16)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//INFILE  DD DSN = MY.PS.ESDS,DISP = SHR
+//OUTFILE DD DSN = MY.VSAM1.KSDSSFILE,DISP = SHR
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   REPRO INFILE(INFILE) 
+      OUTFILE(OUTFILE)
+     REPLACE
+/*
+
+(17)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//INFILE  DD DSN = MY.PS.RRDS,DISP = SHR
+//OUTFILE DD DSN = MY.VSAM1.KSDSSFILE,DISP = SHR
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   REPRO INFILE(INFILE) 
+      OUTFILE(OUTFILE)
+/*
+
+(18)
+//PSTOGDG JOB (1234),'INDUS',CLASS=A,MSGCLASS=A,MSGLEVEL=(1,1),
+//             NOTIFY=&SYSUID,REGION=6M                         
+//******************************************************           
+//*WPR062G JCL REPRO/COPY DATA FROM PS TO GDG USING REPRO
+//******************************************************           
+//STEPOZA  EXEC  PGM=IDCAMS                             
+//SYSPRINT DD  SYSOUT=*                                 
+//PSFILE   DD  DSN=WPRO62.TEST.CUSTOMER.INPUT,         
+//             DISP=SHR                                 
+//GDGFILE  DD  DSN=WPRO62.TEST.CUSTOMER.BKUP(+1),
+//             DISP=(NEW,CATLG,DELETE),                        
+//             UNIT=TEST,SPACE=(CYL,(10,10),RLSE),      
+//             DCB=(MODEL.GDG,RECFM=FB,LRECL=80)       
+//SYSIN    DD  *                                        
+   REPRO INFILE(PSFILE) OUTFILE(GDGFILE)
+   SKIP(5) COUNT(10)               
+/* 
+
+(19)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//INFILE  DD DSN = MY.PS.RRDS,DISP = SHR
+//OUTFILE DD DSN = MY.VSAM1.ESDSSFILE,DISP = SHR
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   REPRO INFILE(INFILE) 
+      OUTFILE(OUTFILE)
+/*
+
+
+===========================================================================
+ALTERNATE INDEX
+===========================================================================
+
+(1)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//SYSPRINT DD  SYSOUT = *
+//SYSIN    DD  *
+   DEFINE AIX (NAME(MY.VSAM.KSDSAIX)      -
+   RELATE(MY.VSAM.KSDSFILE)               -
+   CISZ(4096)                             -
+   FREESPACE(20,20)                       -
+   KEYS(20,7)                             -
+   NONUNIQUEKEY                           -
+   UPGRADE                                -
+   RECORDSIZE(80,80))                     -
+   DATA(NAME(MY.VSAM.KSDSAIX.DATA))       -
+   INDEX(NAME(MY.VSAM.KSDSAIX.INDEX))
+/*
+
+(2)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//SYSPRINT DD  SYSOUT = *
+//SYSIN    DD  *
+   DEFINE AIX (NAME(MY.VSAM.KSDSAIX)      -
+   RELATE(MY.VSAM.KSDSFILE)               -
+   CISZ(4096)                             -
+   FREESPACE(20,20)                       -
+   KEYS(20,7)                             -
+   NONUNIQUEKEY                           -
+   UPGRADE                                -
+   RECORDSIZE(80,80))                     -
+   DATA(NAME(MY.VSAM.KSDSAIX.DATA))       -
+   INDEX(NAME(MY.VSAM.KSDSAIX.INDEX))
+/*
+YES.
+
+===========================================================================
+ADDITIONAL VSAM
+===========================================================================
+
+(1) 
+ENTRY
+Examine
+VERIFY
+
+(2) 
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   VERIFY DS(MY.VSAM.KSDSFILE)                                  
+/*
+
+(3)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   VERIFY DS(MY.VSAM.KSDSFILE)                                  
+/*
+
+
+
+(4)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1  EXEC PGM = IDCAMS
+//SYSPRINT DD  SYSOUT = *
+//SYSIN DD  *
+   LISTCAT ENTRY(MY.VSAM.KSDSFILE) 
+   ALL 
+/*
+
+
+
+===========================================================================
+RECOVER FACILITY
+===========================================================================
+(1)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1    EXEC PGM=IDCAM
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD *
+
+EXPORT PROJECT.GROUP.KSDS-
+       ODS(PROJECT.GROUP.BACKUP)-
+       TEMPORARY
+*/
+
+(2)
+//WPR062G JOB(WIP,MONI),CLASS = A,MSGCLASS = C
+//STEP1    EXEC PGM=IDCAM
+//SYSPRINT DD SYSOUT=*
+//SYSIN    DD *
+
+IMPORT IDS(PROJECT.GROUP.BACKUP)-
+       ODS(PROJECT.GROUP.KSDS)-
+       INTOEMPTY
+*/
+

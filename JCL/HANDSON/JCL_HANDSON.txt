@@ -1,0 +1,694 @@
+*************IBM Utilities(IEFBR14)*************
+
+(1) Create a PS Dataset and PDS Dataset Using IEFBR14.
+===========================
+Creating PS
+===========================
+    //WPR062G JOB WIP,MONI,CLASS=A,NOTIFY=&SYSUID             
+    //STEP1 EXEC PGM=IEFBR14                                  
+    //DD1 DD DSN=WPR062.FEB21.PM1,DISP=(NEW,CATLG,DELETE),    
+    // SPACE=(TRK,(1,1,0)),DCB=(LRECL=80,RECFM=FB,BLKSIZE=800)
+    //SYSOUT DD SYSOUT=*                                      
+    //SYSPRINT DD SYSOUT=* 
+
+
+===========================
+Creating PDS
+===========================
+    //WPR062G JOB WIP,MONI,CLASS=A,NOTIFY=&SYSUID             
+    //STEP1 EXEC PGM=IEFBR14                                  
+    //DD1 DD DSN=WPR062.FEB21.PDMM,DISP=(NEW,CATLG,DELETE),   
+    // SPACE=(TRK,(1,1,2)),DCB=(LRECL=80,RECFM=FB,BLKSIZE=800)
+    //SYSOUT DD SYSOUT=*                                      
+    //SYSPRINT DD SYSOUT=*  
+
+===========================================================================================
+=========================================================================================== 
+
+*************SPECIAL DD STATEMENT*************
+
+===================================================
+(1) COPY CONTENT FROM 2 PS TO SINGLE PS (CONCATENATION)
+===================================================
+    //WPR062G JOB WIP,CONC,NOTIFY=&SYSUID,CLASS=A
+    //STEP1 EXEC PGM=IEBGENER                    
+    //SYSUT1 DD DSN=WPR062.FEB21.DATA1,DISP=OLD  
+    //       DD DSN=WPR062.FEB21.DATA2,DISP=OLD  
+    //SYSUT2 DD DSN=WPR062.FEB21.CONC,DISP=OLD   
+    //SYSIN DD DUMMY                             
+    //SYSOUT DD SYSOUT=*                         
+    //SYSPRINT DD SYSOUT=*
+
+====================================================
+(2) WRITE TEXT FROM JCL TO DATASET(USING IN STREAM DATA)
+====================================================   
+
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A
+    //STEP1 EXEC PGM=IEBGENER                    
+    //SYSUT1 DD *                                
+    ADDING TEXT TO DS USING JCL                  
+    //SYSUT2 DD DSN=WPR062.FEB21.COPT,           
+    //       DISP=(NEW,CATLG,CATLG),             
+    //       SPACE=(TRK,(1,1,0)),                
+    //       DCB=(RECFM=FB,LRECL=80,BLKSIZE=800) 
+    //SYSIN DD DUMMY                             
+    //SYSOUT DD SYSOUT=*                         
+    //SYSPRINT DD SYSOUT=*                       
+
+====================================================
+(3) DISPLAY CONTENT OF A DATASET IN POOL AREA
+====================================================
+
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A
+    //STEP1 EXEC PGM=IEBGENER                    
+    //SYSUT1 DD DSN=WPR062.FEB21.COPT,DISP=OLD   
+    //SYSUT2 DD SYSOUT=*                         
+    //SYSIN DD DUMMY                             
+    //SYSOUT DD SYSOUT=*                         
+    //SYSPRINT DD SYSOUT=*                       
+
+====================================================
+(4) DISPLAY IN-STREAM DATA IN SPOOL AREA
+==================================================== 
+
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A
+    //STEP1 EXEC PGM=IEBGENER                    
+    //SYSUT1 DD *                                
+    THIS THE DATA TO BE DISPLAYED IN SPOOL       
+    //SYSUT2 DD SYSOUT=*                         
+    //SYSOUT DD SYSOUT=*                         
+    //SYSPRINT DD SYSOUT=*                       
+    //SYSIN DD DUMMY                             
+
+===========================================================================================
+=========================================================================================== 
+
+*************IBM Utilities(IEFBR14)*************
+
+====================================================
+(1) COPY FROM PS TO PS
+====================================================  
+
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A
+    //STEP01 EXEC PGM=IEBGENER                  
+    //SYSUT1 DD DSN=WPR062.FEB21.DATA1,DISP=OLD 
+    //SYSUT2 DD DSN=WPR062.FEB21.DATA2,DISP=OLD 
+    //SYSIN DD DUMMY                            
+    //SYSOUT DD SYSOUT=*                        
+    //SYSPRINT DD SYSOUT=*
+
+====================================================
+(2) COPY FROM PS TO EXISTING PDS MEMBER
+====================================================  
+
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A   
+    //STEP1 EXEC PGM=IEBGENER                     
+    //SYSUT1 DD DSN=WPR062.FEB21.DATA1,DISP=OLD    
+    //SYSUT2 DD DSN=WPR062.FEB21.MONISH(DATA),DISP=OLD
+    //SYSIN DD DUMMY                               
+    //SYSOUT DD SYSOUT=*                           
+    //SYSPRINT DD SYSOUT=*
+
+====================================================
+(3) COPY FROM PS TO NEW PDS MEMBER
+====================================================  
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A   
+    //STEP01 EXEC PGM=IEBGENER                     
+    //SYSUT1 DD DSN=WPR062.FEB21.DATA1,DISP=OLD    
+    //SYSUT2 DD DSN=WPR062.FEB21.MONISH(DAT),DISP=OLD
+    //SYSIN DD DUMMY                               
+    //SYSOUT DD SYSOUT=*                           
+    //SYSPRINT DD SYSOUT=* 
+
+============================================================
+(4) REPLACE CONTENT FROM EXISTING PDS MEMBER TO EXISTING PS
+============================================================ 
+
+//WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A   
+//STEP01 EXEC PGM=IEBGENER                     
+//SYSUT1 DD DSN=WPR062.FEB21.MONISH(DAT),DISP=OLD
+//SYSUT2 DD DSN=WPR062.FEB21.DATA2,DISP=OLD    
+//SYSIN DD DUMMY                               
+//SYSOUT DD SYSOUT=*                           
+//SYSPRINT DD SYSOUT=* 
+
+====================================================
+(5) ALL MEMBERS OF 1 PDS TO ANOTHER
+==================================================== 
+
+//WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A 
+//STEP01 EXEC PGM=IEBCOPY                    
+//SYSUT1 DD DSN=WPR062.FEB21.MONISH,DISP=OLD  
+//SYSUT2 DD DSN=WPR042.FEB21.NEW,DISP=OLD
+//SYSIN DD DUMMY                             
+//SYSOUT DD SYSOUT=*                         
+//SYSPRINT DD SYSOUT=*   
+
+====================================================
+(6) COPY SELECTED MEMBERS
+==================================================== 
+
+//WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A    
+//STEP01 EXEC PGM=IEBCOPY                       
+//SYSUT1 DD DSN=WPR062.FEB21.MONISH,DISP=OLD     
+//SYSUT2 DD DSN=WPR062.FEB21.NEW,DISP=OLD   
+//SYSIN DD *                                    
+ COPY OUTDD=SYSUT2,INDD=SYSUT1                  
+ SELECT MEMBER=(M1,M3)                          
+/*                                              
+//SYSOUT DD SYSOUT=*                            
+//SYSPRINT DD SYSOUT=* 
+
+====================================================
+(7) COPY ALL MEMBERS EXCEPT 1
+==================================================== 
+
+//WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A 
+//STEP01 EXEC PGM=IEBCOPY                    
+//SYSUT1 DD DSN=WPR062.FEB21.MONISH,DISP=OLD  
+//SYSUT2 DD DSN=WPR062.FEB21.NEW,DISP=OLD
+//SYSIN DD *                                 
+ COPY OUTDD=SYSUT2,INDD=SYSUT1               
+ EXCLUDE MEMBER=M1                           
+/*                                           
+//SYSOUT DD SYSOUT=*                         
+//SYSPRINT DD SYSOUT=*
+
+====================================================
+(8) RENAME AND COPY MEMBERS OF PDS TO ANOTHER PDS
+====================================================
+
+//WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A     
+//STEP01 EXEC PGM=IEBCOPY                        
+//SYSUT1 DD DSN=WPR062.FEB21.MONISH,DISP=OLD      
+//SYSUT2 DD DSN=WPR062.FEB21.NEW,DISP=OLD    
+//SYSIN DD *                                     
+ COPY OUTDD=SYSUT2,INDD=SYSUT1                   
+ SELECT MEMBER=((M1,MEM1),(M2,MEM2))             
+/*                                               
+//SYSOUT DD SYSOUT=*                             
+//SYSPRINT DD SYSOUT=* 
+
+====================================================
+(9) COPY FROM PS TO NEW PDS MEMBER
+====================================================
+
+(9(A)) USE THE TYPRUN WITH SCAN AND HOLD AND CHECK THIS WITH ERROR JCL PROGRAM AND CORRECT THE ERRORS AND CHECK THE OUTPUT.
+
+    --WITH ERROR--
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A,TYPRUN=HOLD
+    //STEP01 EXEC PGM=IEBGENERR                             
+    //SYSUT1 DD DSN=WPR062.FEB21.DATA1,DISP=OLD             
+    //       DD DSN=WPR062.FEB21.DATA2,DISP=OLD             
+    //SYSUT2 DD DSN=WPR062.FEB21.CONC,DISP=OLD            
+    //SYSIN DD DUMMY                                        
+    //SYSOUT DD SYSOUT=*                                    
+    //SYSPRINT DD SYSOUT=*
+
+    --WITHOUT ERROR--
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A,TYPRUN=HOLD
+    //STEP01 EXEC PGM=IEBGENER                              
+    //SYSUT1 DD DSN=WPR062.FEB21.DATA1,DISP=OLD             
+    //       DD DSN=WPR062.FEB21.DATA2,DISP=OLD             
+    //SYSUT2 DD DSN=WPR062.FEB21.CONC,DISP=OLD            
+    //SYSIN DD DUMMY                                        
+    //SYSOUT DD SYSOUT=*                                    
+    //SYSPRINT DD SYSOUT=*
+
+=========================================================================================
+(10) CHECK THE ERROR MESSAGE BY EXECUTING THE PROGRAM 3 WHEN THE OUTPUT DATASET LEFT OPEN
+=========================================================================================
+
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A     
+    //STEP01 EXEC PGM=IEBGENER                       
+    //SYSUT1 DD DSN=WPR062.FEB21.DATA,DISP=OLD      
+    //SYSUT2 DD DSN=WPR062.FEB21.MONISH(DAT),DISP=OLD  
+    //SYSIN DD DUMMY                                 
+    //SYSOUT DD SYSOUT=*                             
+    //SYSPRINT DD SYSOUT=* 
+
+=======================================================
+(11) COPY THE CONTENT OF ONE PDS TO ANOTHER PDS MEMBER.
+=======================================================
+
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A   
+    //STEP01 EXEC PGM=IEBGENER                     
+    //SYSUT1 DD DSN=WPR062.FEB21.MONISH(M1),DISP=OLD
+    //SYSUT2 DD DSN=WPR062.FEB21.MONISH(M4),DISP=OLD
+    //SYSIN DD DUMMY                               
+    //SYSOUT DD SYSOUT=*                           
+    //SYSPRINT DD SYSOUT=*  
+
+====================================================================================
+(12) SWAP THE TWO CONTENT OF 2 PS USING IEBGENER DATASET(USE THE TEMPORARY DATASET)
+====================================================================================
+
+    //WPR062G JOB WIP,WIP,NOTIFY=&SYSUID,CLASS=A               
+    //STEP01 EXEC PGM=IEBGENER                                 
+    //SYSUT1 DD DSN=WPR062.FEB21.DATA1,DISP=OLD                
+    //SYSUT2 DD DSN=WPR062.FEB21.TEMP1,DISP=(NEW,CATLG,CATLG),
+    //       SPACE=(TRK,(1,1,0)),                              
+    //       DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)               
+    //SYSIN DD DUMMY                                           
+    //SYSPRINT DD SYSOUT=*                                     
+    //STEP02 EXEC PGM=IEBGENER                                 
+    //SYSUT1 DD DSN=WPR062.FEB21.DATA2,DISP=OLD                
+    //SYSUT2 DD DSN=WPR062.FEB21.DATA1,DISP=OLD                
+    //SYSIN DD DUMMY                                           
+    //SYSPRINT DD SYSOUT=*                                     
+    //STEP03 EXEC PGM=IEBGENER                                 
+    //SYSUT1 DD DSN=WPR062.FEB21.TEMP1,DISP=OLD               
+    //SYSUT2 DD DSN=WPR062.FEB21.DATA2,DISP=OLD                
+    //SYSIN DD DUMMY                                           
+    //SYSOUT DD SYSOUT=*                                       
+    //SYSPRINT DD SYSOUT=*   
+
+===========================================================================================
+===========================================================================================
+
+*************COMMON PARAMETERS ON JOB AND EXEC*************
+
+(1)
+
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A             
+    //STEP01 EXEC PGM=IEBGENER                               
+    //SYSUT1 DD DSN=WPR062.FEB21.DATA1,DISP=OLD              
+    //SYSUT2 DD DSN=WPR062.FEB21.DATA2,DISP=OLD              
+    //SYSPRINT DD SYSOUT=*                                   
+    //SYSIN DD DUMMY                                         
+    //STEP02 EXEC PGM=IEBGENER,COND=(0,NE,STEP01)            
+    //SYSUT1 DD *                                            
+    SUCCESS                                                  
+    /*                                                       
+    //SYSUT2 DD SYSOUT=*                                     
+    //SYSIN DD DUMMY                                         
+    //SYSPRINT DD SYSOUT=*                                   
+    //STEP03 EXEC PGM=IEBGENER,COND=(4,GT,STEP01)            
+    //SYSUT1 DD *                                            
+    FAILURE                                                  
+    /*                                                       
+    //SYSUT2 DD SYSOUT=*                                     
+    //SYSIN DD DUMMY                                         
+    //SYSPRINT DD SYSOUT=*
+
+==========================================================================================
+==========================================================================================
+
+*************SORT AND MERGE UTILITIES*************
+
+=======================================================================================
+(1) COPY THE EMPLOYEE RECORDS FROM ONE DATASET TO ANOTHER IN ASCENDING ORDER OF EMPID.
+=======================================================================================
+
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A
+    //STEP01 EXEC PGM=SORT                      
+    //SORTIN DD DSN=WPR062.FEB21.DATA1,DISP=OLD 
+    //SORTOUT DD DSN=WPR062.FEB21.DATA2,DISP=OLD
+    //SYSIN DD *                                
+      SORT FIELDS=(1,3,CH,A)                    
+    //SYSOUT DD SYSOUT=*                        
+    //SYSPRINT DD SYSOUT=*       
+
+=======================================================================================
+(2) COPY ALL EMPLOYEE RECORDS IN ASCENDING ORDER OF DEPARTMENT, WITHIN THE DEPARTMENT RECORDS SHOULD BE SORTED BY DESCENDING ORDER OF EMPID.
+=======================================================================================   
+
+    //WPR062G JOB WIP,MONISH,NOTIFY=&SYSUID,CLASS=A
+    //STEP01 EXEC PGM=SORT                      
+    //SORTIN DD DSN=WPR062.FEB21.DATA1,DISP=OLD 
+    //SORTOUT DD DSN=WPR062.FEB21.DATA2,DISP=OLD
+    //SYSIN DD *                                
+      SORT FIELDS=(13,2,CH,A,1,3,CH,D)          
+    //SYSOUT DD SYSOUT=*                        
+    //SYSPRINT DD SYSOUT=*         
+
+=======================================================================================
+(3) COPY THE EMPLOYEE RECORDS OF PARTICULAR DEPARTMENT IN DESCENDING ORDER OF EMPID.
+=======================================================================================
+
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A 
+    //STEP01 EXEC PGM=SORT                       
+    //SORTIN DD DSN=WPR062.FEB21.DATA1,DISP=OLD  
+    //SORTOUT DD DSN=WPR062.FEB21.DATA2,DISP=OLD 
+    //SYSIN DD *                                 
+      SORT FIELDS=(1,3,CH,D)                     
+      INCLUDE COND=(13,2,CH,EQ,C'03')            
+    //SYSOUT DD SYSOUT=*                         
+    //SYSPRINT DD SYSOUT=*
+
+=======================================================================================
+(4) COPY THE EMPLOYEE RECORDS OF ALL DEPARTMENTS EXCEPT SALES.
+======================================================================================= 
+
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A 
+    //STEP01 EXEC PGM=SORT                       
+    //SORTIN DD DSN=WPR062.FEB21.DATA1,DISP=OLD  
+    //SORTOUT DD DSN=WPR062.FEB21.DATA2,DISP=OLD 
+    //SYSIN DD *                                 
+      SORT FIELDS=(1,3,CH,D)                     
+      OMIT COND=(13,24,CH,EQ,C'SALES')           
+    //SYSOUT DD SYSOUT=*                         
+    //SYSPRINT DD SYSOUT=*   
+
+=======================================================================================
+(5) COPY THE 7 RECORDS FROM 5TH RECORD AND STORE THE SAME IN ASCENDING ORDER OF NAME.
+=======================================================================================  
+
+//WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A
+//STEP01 EXEC PGM=SORT                      
+//SORTIN DD DSN=WPR062.FEB21.DATA1,DISP=OLD 
+//SORTOUT DD DSN=WPR062.FEB21.DATA2,DISP=OLD
+//SYSIN DD *                                
+  SORT FIELDS=COPY                          
+  OUTFIL STARTREC=5,ENDREC=11               
+//SYSOUT DD SYSOUT=*                        
+//SYSPRINT DD SYSOUT=*                      
+//STEP02 EXEC PGM=SORT                      
+//SORTIN DD DSN=WPR062.FEB21.DATA2,DISP=OLD 
+//SORTOUT DD DSN=WPR062.FEB21.DATA2,DISP=OLD
+//SYSIN DD *                                
+  SORT FIELDS=(4,5,CH,A)                    
+/*                                          
+//SYSOUT DD SYSOUT=*                        
+//SYSPRINT DD SYSOUT=*                       
+    
+
+=======================================================================================
+(6) ELIMINATE THE RECORDS WITH DUPLICATED NAME AND COPY THE REMAINING RECORDS IN ASCENDING ORDER OF NAME.
+=======================================================================================   
+    
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A 
+    //STEP01 EXEC PGM=SORT                       
+    //SORTIN DD DSN=WPR062.FEB21.DATA1,DISP=OLD  
+    //SORTOUT DD DSN=WPR062.FEB21.DATA2,DISP=OLD 
+    //SYSIN DD *                                 
+      SORT FIELDS=(4,5,CH,A)                     
+      SUM FIELDS=NONE                            
+    //SYSOUT DD SYSOUT=*                         
+    //SYSPRINT DD SYSOUT=*         
+
+=======================================================================================
+(7) COPY ALL RECORDS OF SALES DEPARTMENT WHO HAS SALARY GREATER THAN 50000 AND SORT BY THEIR NAME.
+=======================================================================================          
+
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A             
+    //STEP01 EXEC PGM=SORT                                   
+    //SORTIN DD DSN=WPR062.FEB21.DATA1,DISP=OLD              
+    //SORTOUT DD DSN=WPR062.FEB21.DATA2,DISP=OLD             
+    //SYSIN DD *                                             
+      SORT FIELDS=COPY                                       
+      INCLUDE COND=(14,12,CH,EQ,C'SALES',AND,9,5,FS,GT,50000)
+    //SYSOUT DD SYSOUT=*                                     
+    //SYSPRINT DD SYSOUT=*                                    
+    //STEP02 EXEC PGM=SORT                                   
+    //SORTIN DD DSN=WPR062.FEB21.DATA2,DISP=OLD              
+    //SORTOUT DD DSN=WPR062.FEB21.DATA2,DISP=OLD             
+    //SYSIN DD *                                             
+      SORT FIELDS=(4,5,CH,A)                                 
+    //SYSOUT DD SYSOUT=*                                     
+    //SYSPRINT DD SYSOUT=*
+
+=======================================================================================
+(8)  STORE THE RECORDS IN DIFFERENT FILES BASED ON THEIR DEPARTMENT.
+=======================================================================================    
+
+    //WPR062G JOB WIP,WIP,NOTIFY=&SYSUID,CLASS=A       
+    //STEP01 EXEC PGM=SORT                             
+    //SORTIN DD DSN=WPR062.FEB21.DATA1,DISP=OLD        
+    //SORTOUT DD DSN=WPR062.FEB21.SAL,DISP=OLD         
+    //SYSIN DD *                                       
+      SORT FIELDS=COPY                                 
+      INCLUDE COND=(14,12,CH,EQ,C'SALES')              
+    /*                                                 
+    //SYSOUT DD SYSOUT=*                               
+    //SYSPRINT DD SYSOUT=*                             
+    //STEP02 EXEC PGM=SORT                             
+    //SORTIN DD DSN=WPR062.FEB21.DATA1,DISP=OLD        
+    //SORTOUT DD DSN=WPR062.FEB21.PROD,DISP=OLD         
+    //SYSIN DD *                                       
+      SORT FIELDS=COPY                                 
+      INCLUDE COND=(14,12,CH,EQ,C'PRODUCTION')         
+    /*                                                 
+    //SYSOUT DD SYSOUT=*                               
+    //SYSPRINT DD SYSOUT=*                             
+    //STEP03 EXEC PGM=SORT                             
+    //SORTIN DD DSN=WPR062.FEB21.DATA1,DISP=OLD        
+    //SORTOUT DD DSN=WPR062.FEB21.CST,DISP=OLD         
+    //SYSIN DD *                                       
+      SORT FIELDS=COPY                                 
+      INCLUDE COND=(14,12,CH,EQ,C'CUSTOMERHELP') 
+    /*                                           
+    //SYSOUT DD SYSOUT=*                         
+    //SYSPRINT DD SYSOUT=* 
+
+=======================================================================================
+(9) INPUT FILE CONTAINS THE DETAILS LIKE EMPNO, NAME, SALARY , DEPT & MOBILE, COPY ONLY THE NAME  EMPNO & MOBILE  IN THE ASCENDING ORDER OF NAME FILED. 
+=======================================================================================  
+
+    //WPR062G JOB WIP,WIP,NOTIFY=&SYSUID,CLASS=A     
+    //STEP01 EXEC PGM=SORT                           
+    //SORTIN DD DSN=WPR062.FEB21.DATA1,DISP=OLD      
+    //SORTOUT DD DSN=WPR022.FEB21.DATA2,DISP=OLD     
+    //SYSIN DD *                                     
+      SORT FIELDS=COPY                               
+      INREC FIELDS=(1:1,3,4:4,5,9:26,10)             
+    /*                                               
+    //SYSOUT DD SYSOUT=*                             
+    //SYSPRINT DD SYSOUT=*                           
+    //STEP02 EXEC PGM=SORT                           
+    //SORTIN DD DSN=WPR062.FEB21.DATA2,DISP=OLD      
+    //SORTOUT DD DSN=WPR062.FEB21.DATA2,DISP=OLD     
+    //SYSIN DD *                                     
+      SORT FIELDS=(4,5,CH,A)                         
+    /*                                               
+    //SYSOUT DD SYSOUT=*                             
+    //SYSPRINT DD SYSOUT=* 
+
+=======================================================================================
+(10) MERGE THE CONTENT OF 2 FILES USING THE SORT UTILITY.
+=======================================================================================   
+
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A
+    //STEP01 EXEC PGM=SORT                      
+    //SORTIN1 DD DSN=WPR062.FEB21.SAL,DISP=OLD  
+    //SORTIN2 DD DSN=WPR062.FEB21.PROD,DISP=OLD  
+    //SORTOUT DD DSN=WPR062.FEB21.DATA2,DISP=OLD
+    //SYSIN DD *                                
+      MERGE FIELDS=(1,23,CH,A)                  
+    /*                                          
+    //SYSOUT DD SYSOUT=*                        
+    //SYSPRINT DD SYSOUT=*       
+
+=======================================================================================
+=======================================================================================
+
+*************PROCEDURE STATEMENTS,JCLLIB,INCLUDE*************
+
+=======================================================================================
+(1) WRITE A CATALOG PROCEDURE TO COPY FROM DATASET TO ANOTHER.
+======================================================================================= 
+
+PRO1
+
+    //STEP01 EXEC PGM=IEBGENER                   
+    //SYSUT1 DD DSN=WPR062.FEB21.DATA1,DISP=OLD  
+    //SYSUT2 DD DSN=WPR062.FEB21.DATA2,DISP=OLD  
+    //SYSIN DD DUMMY                             
+    //SYSOUT DD SYSOUT=*                         
+    //SYSPRINT DD SYSOUT=*                       
+
+
+JCL25
+
+    //WPR042G JOB WIP,WIP,NOTIFY=&SYSUID,CLASS=A 
+    //PRCLIB JCLLIB ORDER=(WPR062.FEB21.JCLU)   
+    //STEP01 EXEC PROC=PRO1 
+
+=======================================================================================
+(2) USING THE ABOVE CATALOG PROCEDURE SWAP THE CONTENT OF 2 PS DATASETS.
+======================================================================================= 
+
+PRO2
+
+    //STEP01 EXEC PGM=IEBGENER                   
+    //SYSUT1 DD DSN=WPR062.FEB21.SRC,DISP=OLD  
+    //SYSUT2 DD DSN=WPR062.FEB21.TEMP,DISP=OLD 
+    //SYSIN DD DUMMY                             
+    //SYSPRINT DD SYSOUT=*                       
+    //STEP02 EXEC PGM=IEBGENER                   
+    //SYSUT1 DD DSN=WPR062.FEB21.TRGU1,DISP=OLD  
+    //SYSUT2 DD DSN=WPR062.FEB21.SRCU1,DISP=OLD  
+    //SYSIN DD DUMMY                             
+    //SYSPRINT DD SYSOUT=*                       
+    //STEP03 EXEC PGM=IEBGENER                   
+    //SYSUT1 DD DSN=WPR062.FEB21.TEMPU1,DISP=OLD 
+    //SYSUT2 DD DSN=WPR062.FEB21.TRGU1,DISP=OLD  
+    //SYSIN DD DUMMY                             
+    //SYSOUT DD SYSOUT=*                         
+    //SYSPRINT DD SYSOUT=*    
+
+JCL26
+
+    //WPR062G JOB WIP,WIP,NOTIFY=&SYSUID,CLASS=A  
+    //PROCLIB JCLLIB ORDER=(WPR062.FEB21.JCLU)   
+    //STEP01 EXEC PROC=PRO2   
+
+=======================================================================================
+(3) WRITE A CATALOG PROCEDURE TO SWAP THE CONTENT OF 2 DATASETS & USING THIS PROC WRITE A JCL TO SWAP THE CONTENT.
+=======================================================================================
+
+PRO3
+
+    //STEP01 EXEC PGM=IEBGENER        
+    //SYSUT1 DD DSN=&INF,DISP=OLD     
+    //SYSUT2 DD DSN=&OUTF,DISP=OLD    
+    //SYSIN DD DUMMY                  
+    //SYSPRINT DD SYSOUT=*            
+    //SYSOUT DD SYSOUT=*              
+
+
+JCLP31
+
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A 
+    //PROCLIB JCLLIB ORDER=(WPR062.FEB21.JCLU)  
+    //STEP01 EXEC PROC=PRO3,                    
+    //            INF=WPR062.FEB21.SRCU1,        
+    //            OUTF=WPR062.FEB21.TEMPU1       
+    //STEP02 EXEC PROC=PRO3,                    
+    //            INF=WPR062.FEB21.TRGU1,        
+    //            OUTF=WPR062.FEB21.SRCU1        
+    //STEP03 EXEC PROC=PRO3,                    
+    //            INF=WPR062.FEB21.TEMPU1,       
+    //            OUTF=WPR062.FEB21.TRGU1        
+    //SYSOUT DD SYSOUT=*                         
+    //SYSPRINT DD SYSOUT=*
+
+=======================================================================================
+=======================================================================================
+
+*************CREATING GDG*************
+
+=======================================================================================
+(1) CREATE A GDG BASE NAMED 'PAYSLIP' WHICH CAN GENERATE 12 GENERATIONS TO STORE 12 MONTHS PAY DETAILS .
+=======================================================================================
+
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A  
+    //STEP01 EXEC PGM=IDCAMS                      
+    //SYSIN DD *                                  
+         DEFINE GDG(NAME(WPR062.FEB21.PAYSLIP)-   
+         LIMIT(12)-                               
+         NOEMPTY-                                 
+         NOSCRATCH)                               
+    //SYSDUMP DD SYSOUT=*                         
+    //SYSPRINT DD SYSOUT=*  
+
+=======================================================================================
+=======================================================================================
+
+*************ALTERING AND DELETING GDG*************
+
+=======================================================================================
+(1) COPY THE CONTENT OF PS CONTAINING DETAILS OF EMPLOYEES WITH SALARY DETAILS FOR JAN,FEB,MAR TO NEW GENERATION OF ABOVE GDG
+=======================================================================================
+
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A     
+    //STEP01 EXEC PGM=IDCAMS                         
+    //SYSIN DD *                                     
+      DEFINE GDG(NAME(WPR062.FEB21.SALR)-            
+             LIMIT(3)-                               
+             NOEMPTY-                                
+             NOSCRATCH)                              
+    /*                                               
+    //SYSPRINT DD SYSOUT=*                           
+    //SYSOUT DD SYSOUT=*                             
+    //STEP02 EXEC PGM=SORT                           
+    //SORTIN DD DSN=WPR062.FEB21.DATA1,DISP=OLD      
+    //SORTOUT DD DSN=WPR062.FEB21.SALR(+1),          
+    //           DISP=(NEW,CATLG,CATLG),             
+    //           SPACE=(TRK,(1,1,0)),                
+    //           DCB=(RECFM=FB,LRECL=80,BLKSIZE=800) 
+    //SYSIN DD *                                     
+       SORT FIELDS=COPY                              
+       INCLUDE COND=(36,3,CH,EQ,C'JAN')              
+    /*                                               
+    //SYSPRINT DD SYSOUT=*                           
+    //SYSOUT DD SYSOUT=*                             
+    //STEP03 EXEC PGM=SORT                           
+    //SORTIN DD DSN=WPR062.FEB21.DATA1,DISP=OLD      
+    //SORTOUT DD DSN=WPR062.FEB21.SALR(+2),         
+    //           DISP=(NEW,CATLG,CATLG),            
+    //           SPACE=(TRK,(1,1,0)),               
+    //           DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)
+    //SYSIN DD *                                    
+       SORT FIELDS=COPY                             
+       INCLUDE COND=(36,3,CH,EQ,C'FEB')             
+    /*                                              
+    //SYSOUT DD SYSOUT=*                            
+    //SYSPRINT DD SYSOUT=*                          
+    //STEP04 EXEC PGM=SORT                          
+    //SORTIN DD DSN=WPR062.FEB21.DATA1,DISP=OLD     
+    //SORTOUT DD DSN=WPR062.FEB21.SALR(+3),         
+    //           DISP=(NEW,CATLG,CATLG),            
+    //           SPACE=(TRK,(1,1,0)),               
+    //           DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)
+    //SYSIN DD *                                    
+       SORT FIELDS=COPY                             
+       INCLUDE COND=(36,3,CH,EQ,C'MAR')             
+    /*                                              
+    //SYSPRINT DD SYSOUT=*                          
+    //SYSOUT DD SYSOUT=*  
+
+=======================================================================================
+(2) COPY THE CONTENT OF CURRENT GENERATION  TO NEW GENERATION.
+=======================================================================================  
+
+    //WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A   
+    //STEP01 EXEC PGM=IEBGENER                     
+    //SYSUT1 DD DSN=WPR062.FEB21.SALR(0),DISP=OLD  
+    //SYSUT2 DD DSN=WPR062.FEB21.SALR(+1),         
+    //          DISP=(NEW,CATLG,CATLG),            
+    //          SPACE=(TRK,(1,1,0)),               
+    //          DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)
+    //SYSIN DD DUMMY                               
+    //SYSOUT DD SYSOUT=*                           
+    //SYSPRINT DD SYSOUT=*   
+
+=======================================================================================
+(3) WRITE A JCL FOR BELOW REQUIREMENT.
+    PRE-REQUEST IS, CREATE A GDG WITH 3 GENERATION. (G0001, G0002 & G0003).
+    STEP 1. COPY THE CONTENT OF 2RD GENERATION (G0002) TO NEW GENERATION ( G0004).
+    STEP 2. COPY THE CONTENT OF 3RD GENERATION (G0003) TO NEXT NEW GENERATION ( G0005 ).
+    STEP 3. COPY THE CONTENT OF 4TH GENERATION ( G0004) TO NEW GENERATION ( G0006).
+    ALL THE ABOVE STEPS IN SAME JCL PROGRAM.
+=======================================================================================                           
+
+//WPR062G JOB WIP,MONI,NOTIFY=&SYSUID,CLASS=A   
+//STEP01 EXEC PGM=IEBGENER                     
+//SYSUT1 DD DSN=WPR062.FEB21.SALR(-1),DISP=OLD 
+//SYSUT2 DD DSN=WPR062.FEB21.SALR(+1),         
+//          DISP=(NEW,CATLG,CATLG),            
+//          SPACE=(TRK,(1,1,0)),               
+//          DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)
+//SYSIN DD DUMMY                               
+//SYSOUT DD SYSOUT=*                           
+//SYSPRINT DD SYSOUT=*                         
+//STEP02 EXEC PGM=IEBGENER                     
+//SYSUT1 DD DSN=WPR062.FEB21.SALR(0),DISP=OLD  
+//SYSUT2 DD DSN=WPR062.FEB21.SALR(+2),         
+//          DISP=(NEW,CATLG,CATLG),            
+//          SPACE=(TRK,(1,1,0)),               
+//          DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)
+//SYSIN DD DUMMY                               
+//SYSOUT DD SYSOUT=*                           
+//SYSPRINT DD SYSOUT=*                         
+//STEP03 EXEC PGM=IEBGENER                     
+//SYSUT1 DD DSN=WPR062.FEB21.SALR(+1),DISP=OLD 
+//SYSUT2 DD DSN=WPR062.FEB21.SALR(+3),         
+//          DISP=(NEW,CATLG,CATLG),            
+//          SPACE=(TRK,(1,1,0)),               
+//          DCB=(RECFM=FB,LRECL=80,BLKSIZE=800)
+//SYSIN DD DUMMY                               
+//SYSOUT DD SYSOUT=*                           
+//SYSPRINT DD SYSOUT=*                         
+=======================================================================================
+======================================================================================= 
